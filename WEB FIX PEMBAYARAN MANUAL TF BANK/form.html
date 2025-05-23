@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Upload Bukti Transfer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .form-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 400px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    label {
+      display: block;
+      margin: 12px 0 6px;
+      font-weight: bold;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    select,
+    input[type="file"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    button {
+      background-color: #00bcd4;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      width: 100%;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    button:hover {
+      background-color: #009eb3;
+    }
+
+    @media (max-width: 480px) {
+      .form-container {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="form-container">
+    <h2>Upload Bukti Transfer</h2>
+    <form action="https://formspree.io/f/xnndywwe" method="POST" enctype="multipart/form-data">
+      <label for="nama">Nama Lengkap</label>
+      <input type="text" id="nama" name="nama" required>
+
+      <label for="metode">Metode Pembayaran</label>
+      <select id="metode" name="metode" required>
+        <option value="">Pilih</option>
+        <option value="BCA">BCA</option>
+        <option value="BNI">BNI</option>
+        <option value="BRI">BRI</option>
+        <option value="Mandiri">Mandiri</option>
+        <option value="SeaBank">SeaBank</option>
+        <option value="Danamon">Danamon</option>
+        <option value="ShopeePay">ShopeePay</option>
+        <option value="DANA">DANA</option>
+        <option value="GoPay">GoPay</option>
+        <option value="QRIS (hubungi owner)">QRIS (hubungi owner)</option>
+      </select>
+
+      <label for="jumlah">Jumlah Transfer</label>
+      <input type="number" id="jumlah" name="jumlah" required>
+
+      <label for="bukti">Upload Bukti Transfer</label>
+      <input type="file" id="bukti" name="bukti" accept="image/*" required>
+
+      <button type="submit">Kirim</button>
+    </form>
+  </div>
+
+</body>
+</html>

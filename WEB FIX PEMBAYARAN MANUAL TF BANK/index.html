@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informasi Pembayaran</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      margin: 0;
+      padding: 0;
+      text-align: center;
+      color: #333;
+    }
+
+    h1 {
+      margin-top: 40px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .card {
+      background: #f9f9f9;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .card img {
+      height: 40px;
+      margin-bottom: 10px;
+    }
+
+    .card h3 {
+      margin: 10px 0 5px;
+    }
+
+    .copy-btn {
+      background-color: #00aaff;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      padding: 6px 12px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .qris-section {
+      margin: 40px auto;
+      text-align: center;
+    }
+
+    .upload {
+      margin: 30px auto;
+    }
+
+    .upload a {
+      background: #00bcd4;
+      color: #fff;
+      padding: 12px 24px;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+
+    @media (max-width: 768px) {
+      .grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 480px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        max-width: 90%;
+        margin: 0 auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>Informasi Pembayaran</h1>
+  <p>Silakan lakukan pembayaran ke salah satu rekening berikut:</p>
+  <div class="grid">
+    <!-- Card 1 -->
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="BCA">
+      <h3>BCA</h3>
+      <p id="bca">8365478640</p>
+      <p>a.n. Rizka Arwani</p>
+      <button class="copy-btn" onclick="copyText('bca')">Salin</button>
+    </div>
+    <!-- Card 2 -->
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/BankNegaraIndonesia46-logo.svg" alt="BNI">
+      <h3>BNI</h3>
+      <p id="bni">0837947494</p>
+      <p>a.n. Rizka Arwani</p>
+      <button class="copy-btn" onclick="copyText('bni')">Salin</button>
+    </div>
+    <!-- Card 3 -->
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/BRI_2020.svg" alt="BRI">
+      <h3>BRI</h3>
+      <p id="bri">592801047177534</p>
+      <p>a.n. Rizka Arwani</p>
+      <button class="copy-btn" onclick="copyText('bri')">Salin</button>
+    </div>
+    <!-- Card 4 -->
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg" alt="Mandiri">
+      <h3>Mandiri</h3>
+      <p id="mandiri">1840003632856</p>
+      <p>a.n. Rizka Arwani</p>
+      <button class="copy-btn" onclick="copyText('mandiri')">Salin</button>
+    </div>
+    <!-- Card 5 -->
+    <div class="card">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/SeaBank.svg" alt="SeaBank">
+      <h3>SeaBank</h3>
+      <p id="seabank">901010934880</p>
+      <p>a.n. Rizka Arwani</p>
+      <button class="copy-btn" onclick="copyText('seabank')">Salin</button>
+    </div>
+    <!-- Card 6 -->
+    <div class="card">
+      <img src="https://i.imgur.com/j4R3BLB.png" alt="Danamon">
+      <h3>Danamon</h3>
+      <p id="danamon">003607068578</p>
+      <p>a.n. Rizka Arwani</p>
+      <button class="copy-btn" onclick="copyText('danamon')">Salin</button>
+    </div>
+    <!-- Card 7 -->
+    <div class="card">
+      <img src="https://softwareakuntansi.co.id/wp-content/uploads/2021/09/logo-shopeepay.png" alt="ShopeePay">
+      <h3>ShopeePay</h3>
+      <p id="shopeepay">082326525782</p>
+      <p>a.n. Rizka Arwani</p>
+      <button class="copy-btn" onclick="copyText('shopeepay')">Salin</button>
+    </div>
+    <!-- Card 8 -->
+    <div class="card">
+      <img src="https://softwareakuntansi.co.id/wp-content/uploads/2021/09/logo-dana.png" alt="DANA">
+      <h3>DANA</h3>
+      <p id="dana">082326525782</p>
+      <p>a.n. Rizka Arwani</p>
+      <button class="copy-btn" onclick="copyText('dana')">Salin</button>
+    </div>
+    <!-- Card 9 -->
+    <div class="card">
+      <img src="https://i.imgur.com/u0NK6C1.png" alt="GoPay">
+      <h3>GoPay</h3>
+      <p id="gopay">082326525782</p>
+      <p>a.n. Rizka Arwani</p>
+      <button class="copy-btn" onclick="copyText('gopay')">Salin</button>
+    </div>
+  </div>
+
+  <div class="upload">
+    <a href="form.html">Lanjut ke Upload Bukti</a>
+  </div>
+
+  <script>
+    function copyText(id) {
+      const text = document.getElementById(id).innerText;
+      navigator.clipboard.writeText(text).then(() => {
+        alert('Nomor berhasil disalin: ' + text);
+      });
+    }
+  </script>
+</body>
+</html>
