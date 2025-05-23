@@ -1,85 +1,55 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Upload Bukti Transfer</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      margin: 0;
-      padding: 20px;
+      background: #f4f4f4;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
+      margin: 0;
     }
-
     .form-container {
       background: #fff;
       padding: 30px;
       border-radius: 16px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
       width: 100%;
       max-width: 400px;
     }
-
-    h2 {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-
-    label {
-      display: block;
-      margin: 12px 0 6px;
-      font-weight: bold;
-    }
-
-    input[type="text"],
-    input[type="number"],
-    select,
-    input[type="file"] {
+    input, select {
       width: 100%;
       padding: 10px;
-      border: 1px solid #ccc;
+      margin: 10px 0;
       border-radius: 8px;
+      border: 1px solid #ccc;
     }
-
     button {
-      background-color: #00bcd4;
+      width: 100%;
+      background: #00bcd4;
       color: white;
       border: none;
       padding: 12px;
       border-radius: 8px;
-      width: 100%;
-      font-size: 16px;
       cursor: pointer;
-      margin-top: 20px;
     }
-
     button:hover {
-      background-color: #009eb3;
-    }
-
-    @media (max-width: 480px) {
-      .form-container {
-        padding: 20px;
-      }
+      background: #009eb3;
     }
   </style>
 </head>
 <body>
-
   <div class="form-container">
     <h2>Upload Bukti Transfer</h2>
-    <form action="https://formspree.io/f/xnndywwe" method="POST" enctype="multipart/form-data">
-      <label for="nama">Nama Lengkap</label>
-      <input type="text" id="nama" name="nama" required>
-
-      <label for="metode">Metode Pembayaran</label>
-      <select id="metode" name="metode" required>
-        <option value="">Pilih</option>
+    <form id="uploadForm">
+      <input type="text" name="nama" placeholder="Nama Lengkap" required>
+      <select name="metode" required>
+        <option value="">Pilih Metode</option>
         <option value="BCA">BCA</option>
         <option value="BNI">BNI</option>
         <option value="BRI">BRI</option>
@@ -89,18 +59,37 @@
         <option value="ShopeePay">ShopeePay</option>
         <option value="DANA">DANA</option>
         <option value="GoPay">GoPay</option>
-        <option value="QRIS (hubungi owner)">QRIS (hubungi owner)</option>
+        <option value="QRIS">QRIS</option>
       </select>
-
-      <label for="jumlah">Jumlah Transfer</label>
-      <input type="number" id="jumlah" name="jumlah" required>
-
-      <label for="bukti">Upload Bukti Transfer</label>
-      <input type="file" id="bukti" name="bukti" accept="image/*" required>
-
+      <input type="number" name="jumlah" placeholder="Jumlah Transfer" required>
+      <input type="file" name="bukti" accept="image/*" required>
       <button type="submit">Kirim</button>
     </form>
+    <p id="msg"></p>
   </div>
 
+  <script>
+    const form = document.getElementById('uploadForm');
+    const msg = document.getElementById('msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      msg.innerText = "Mengirim data...";
+
+      try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbzln8mGMhcj5fuvOSeHN68RG7Gt06Ztg-nSG4oLbHkoaEOjy1YA5ONu7e5A96qqoKQX7g/exec', {
+          method: 'POST',
+          body: data
+        });
+
+        const resText = await response.text();
+        msg.innerText = resText;
+        form.reset();
+      } catch (err) {
+        msg.innerText = "Terjadi kesalahan: " + err.message;
+      }
+    });
+  </script>
 </body>
 </html>
