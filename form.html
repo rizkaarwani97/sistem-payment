@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Bukti Transfer</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .form-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 16px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      background: #00bcd4;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #009eb3;
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Upload Bukti Transfer</h2>
+    <form id="uploadForm">
+      <input type="text" name="nama" placeholder="Nama Lengkap" required>
+      <select name="metode" required>
+        <option value="">Pilih Metode</option>
+        <option value="BCA">BCA</option>
+        <option value="BNI">BNI</option>
+        <option value="BRI">BRI</option>
+        <option value="Mandiri">Mandiri</option>
+        <option value="SeaBank">SeaBank</option>
+        <option value="Danamon">Danamon</option>
+        <option value="ShopeePay">ShopeePay</option>
+        <option value="DANA">DANA</option>
+        <option value="GoPay">GoPay</option>
+        <option value="QRIS">QRIS</option>
+      </select>
+      <input type="number" name="jumlah" placeholder="Jumlah Transfer" required>
+      <input type="file" name="bukti" accept="image/*" required>
+      <button type="submit">Kirim</button>
+    </form>
+    <p id="msg"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+    const msg = document.getElementById('msg');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = new FormData(form);
+      msg.innerText = "Mengirim data...";
+
+      try {
+        const response = await fetch('https://script.google.com/macros/s/AKfycbzln8mGMhcj5fuvOSeHN68RG7Gt06Ztg-nSG4oLbHkoaEOjy1YA5ONu7e5A96qqoKQX7g/exec', {
+          method: 'POST',
+          body: data
+        });
+
+        const resText = await response.text();
+        msg.innerText = resText;
+        form.reset();
+      } catch (err) {
+        msg.innerText = "Terjadi kesalahan: " + err.message;
+      }
+    });
+  </script>
+</body>
+</html>
