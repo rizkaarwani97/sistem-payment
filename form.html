@@ -6,28 +6,29 @@
   <title>Upload Bukti Transfer</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-  <div class="bg-white shadow-md rounded-xl p-6 w-full max-w-md">
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white shadow-xl rounded-xl p-6 w-full max-w-md">
     <h2 class="text-xl font-bold mb-4 text-center">Upload Bukti Transfer</h2>
-    <form id="uploadForm">
-      <input type="text" name="nama" placeholder="Nama Lengkap" required class="w-full p-2 mb-3 border rounded" />
-      <select name="metode" required class="w-full p-2 mb-3 border rounded">
+    <form id="uploadForm" class="space-y-3">
+      <input type="text" name="nama" placeholder="Nama Lengkap" required class="w-full p-2 border rounded-md">
+      <select name="metode" required class="w-full p-2 border rounded-md">
         <option value="">Pilih Metode</option>
-        <option value="BCA">BCA</option>
-        <option value="BNI">BNI</option>
-        <option value="BRI">BRI</option>
-        <option value="Mandiri">Mandiri</option>
-        <option value="SeaBank">SeaBank</option>
-        <option value="ShopeePay">ShopeePay</option>
-        <option value="DANA">DANA</option>
-        <option value="GoPay">GoPay</option>
-        <option value="QRIS">QRIS</option>
+        <option>BCA</option>
+        <option>BNI</option>
+        <option>BRI</option>
+        <option>Mandiri</option>
+        <option>SeaBank</option>
+        <option>Danamon</option>
+        <option>ShopeePay</option>
+        <option>DANA</option>
+        <option>GoPay</option>
+        <option>QRIS</option>
       </select>
-      <input type="number" name="jumlah" placeholder="Jumlah Transfer" required class="w-full p-2 mb-3 border rounded" />
-      <input type="file" name="bukti" accept="image/*" required class="w-full p-2 mb-3 border rounded"/>
-      <button type="submit" class="bg-blue-500 text-white w-full py-2 rounded hover:bg-blue-600">Kirim</button>
+      <input type="number" name="jumlah" placeholder="Jumlah Transfer" required class="w-full p-2 border rounded-md">
+      <input type="file" name="bukti" accept="image/*" required class="w-full p-2 border rounded-md">
+      <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full">Kirim</button>
+      <p id="msg" class="text-center text-sm text-gray-600 mt-2"></p>
     </form>
-    <p id="msg" class="text-center text-sm mt-3"></p>
   </div>
 
   <script>
@@ -36,22 +37,19 @@
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();
-      msg.innerText = "Mengirim data...";
-
       const formData = new FormData(form);
+      msg.textContent = "Mengirim data...";
+
       try {
-        const response = await fetch(
-          "https://script.google.com/macros/s/AKfycbx974mrpcis5WKVtrF0oAPJwVIZ-H7VWNqw_3HBVqY0rm-2bbc_4XyFLSKWSmpZu-n6/exec", // ← Ganti setelah deploy
-          {
-            method: "POST",
-            body: formData,
-          }
-        );
-        const resText = await response.text();
-        msg.innerText = resText;
-        form.reset();
+        const res = await fetch("https://script.google.com/macros/s/AKfycbzMAkaSsbpa-9vQcPvBL-d6lyOgRp4mguEccNlAt0Pc7nngpNAgolPgI7_7EELE6CP5/exec", {
+          method: "POST",
+          body: formData,
+        });
+        const text = await res.text();
+        msg.textContent = text;
+        if (res.ok) form.reset();
       } catch (err) {
-        msg.innerText = "Gagal mengirim: " + err.message;
+        msg.textContent = "Gagal mengirim: " + err.message;
       }
     });
   </script>
