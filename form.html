@@ -2,45 +2,82 @@
 <html>
   <head>
     <base target="_top">
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+        background: #f7f9fc;
+        max-width: 500px;
+        margin: auto;
+      }
+      h2 {
+        color: #333;
+      }
+      label {
+        font-weight: bold;
+        display: block;
+        margin-top: 15px;
+      }
+      input[type="text"], select, input[type="file"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        box-sizing: border-box;
+      }
+      button {
+        margin-top: 20px;
+        padding: 10px 15px;
+        background-color: #1976d2;
+        color: white;
+        border: none;
+        cursor: pointer;
+        border-radius: 4px;
+      }
+      .response {
+        margin-top: 15px;
+        font-weight: bold;
+      }
+    </style>
   </head>
   <body>
-    <form id="uploadForm" method="post" enctype="multipart/form-data">
-      <label>Nama:</label><br>
-      <input name="nama" type="text" required><br><br>
+    <h2>Upload Bukti Transfer</h2>
+    <form id="uploadForm">
+      <label>Nama:</label>
+      <input type="text" name="nama" required>
 
-      <label>Bank Tujuan:</label><br>
-      <select name="bank">
+      <label>Bank Tujuan:</label>
+      <select name="bank" required>
         <option value="BCA">BCA</option>
         <option value="Mandiri">Mandiri</option>
-        <option value="BRI">BRI</option>
         <option value="BNI">BNI</option>
+        <option value="BRI">BRI</option>
         <option value="QRIS">QRIS</option>
-      </select><br><br>
+      </select>
 
-      <label>Nominal:</label><br>
-      <input name="nominal" type="number" required><br><br>
+      <label>Nominal:</label>
+      <input type="text" name="nominal" required>
 
-      <label>Upload Bukti Transfer:</label><br>
-      <input name="bukti" type="file" accept="image/*" required><br><br>
+      <label>Upload Bukti Transfer:</label>
+      <input type="file" name="bukti" required>
 
       <button type="submit">Kirim</button>
     </form>
 
-    <div id="pesan"></div>
+    <div class="response" id="responseMsg"></div>
 
     <script>
       document.getElementById("uploadForm").addEventListener("submit", function(e) {
         e.preventDefault();
-        const form = document.getElementById("uploadForm");
-        const data = new FormData(form);
+        var form = e.target;
+        var data = new FormData(form);
 
-        fetch("https://script.google.com/macros/s/AKfycbzWjwD-jiZud6CiZW-2WOTAoIAfLDgk0WgWU7GeF-HXEEXODBWuiE_zUHu6dVzJE8XI3g/exec", {
+        fetch("https://script.google.com/macros/s/AKfycbxudO7njRr9-UMOAfiuPWx4hAxRmhaf_ZIRPyXbl2uNoXuMsGDbuQ4-F7F_pvYi5iZ6bA/exec", {
           method: "POST",
-          body: data,
+          body: data
         })
         .then(res => res.text())
-        .then(res => document.getElementById("pesan").innerText = res)
-        .catch(err => document.getElementById("pesan").innerText = "Terjadi kesalahan.");
+        .then(txt => document.getElementById("responseMsg").innerText = txt)
+        .catch(err => document.getElementById("responseMsg").innerText = "Gagal kirim: " + err.message);
       });
     </script>
   </body>
