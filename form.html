@@ -1,57 +1,11 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Upload Bukti Transfer</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+  <meta charset="UTF-8">
+  <meta http-equiv="refresh" content="0; URL=https://docs.google.com/forms/d/e/1FAIpQLScBi9UXKD_XH_A1xyabWbwm6y1xBe386vQ0pcc2u_L6eIupiA/viewform">
+  <title>Mengalihkan ke Google Form...</title>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
-  <div class="bg-white shadow-xl rounded-xl p-6 w-full max-w-md">
-    <h2 class="text-xl font-bold mb-4 text-center">Upload Bukti Transfer</h2>
-    <form id="uploadForm" class="space-y-3">
-      <input type="text" name="nama" placeholder="Nama Lengkap" required class="w-full p-2 border rounded-md">
-      <select name="metode" required class="w-full p-2 border rounded-md">
-        <option value="">Pilih Metode</option>
-        <option>BCA</option>
-        <option>BNI</option>
-        <option>BRI</option>
-        <option>Mandiri</option>
-        <option>SeaBank</option>
-        <option>Danamon</option>
-        <option>ShopeePay</option>
-        <option>DANA</option>
-        <option>GoPay</option>
-        <option>QRIS</option>
-      </select>
-      <input type="number" name="jumlah" placeholder="Jumlah Transfer" required class="w-full p-2 border rounded-md">
-      <input type="file" name="bukti" accept="image/*" required class="w-full p-2 border rounded-md">
-      <button type="submit" class="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 w-full">Kirim</button>
-      <p id="msg" class="text-center text-sm text-gray-600 mt-2"></p>
-    </form>
-  </div>
-
-  <script>
-    const form = document.getElementById("uploadForm");
-    const msg = document.getElementById("msg");
-
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const formData = new FormData(form);
-      msg.textContent = "Mengirim data...";
-
-      try {
-        const res = await fetch("https://script.google.com/macros/s/AKfycbzMAkaSsbpa-9vQcPvBL-d6lyOgRp4mguEccNlAt0Pc7nngpNAgolPgI7_7EELE6CP5/exec", {
-          method: "POST",
-          body: formData,
-        });
-        const text = await res.text();
-        msg.textContent = text;
-        if (res.ok) form.reset();
-      } catch (err) {
-        msg.textContent = "Gagal mengirim: " + err.message;
-      }
-    });
-  </script>
+<body>
+  <p>Mengalihkan ke Google Form, mohon tunggu...</p>
 </body>
 </html>
