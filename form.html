@@ -2,82 +2,62 @@
 <html>
   <head>
     <base target="_top">
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        padding: 20px;
-        background: #f7f9fc;
-        max-width: 500px;
-        margin: auto;
-      }
-      h2 {
-        color: #333;
-      }
-      label {
-        font-weight: bold;
-        display: block;
-        margin-top: 15px;
-      }
-      input[type="text"], select, input[type="file"] {
-        width: 100%;
-        padding: 10px;
-        margin-top: 5px;
-        box-sizing: border-box;
-      }
-      button {
-        margin-top: 20px;
-        padding: 10px 15px;
-        background-color: #1976d2;
-        color: white;
-        border: none;
-        cursor: pointer;
-        border-radius: 4px;
-      }
-      .response {
-        margin-top: 15px;
-        font-weight: bold;
-      }
-    </style>
+    <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body>
-    <h2>Upload Bukti Transfer</h2>
-    <form id="uploadForm">
-      <label>Nama:</label>
-      <input type="text" name="nama" required>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center">
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+      <h2 class="text-2xl font-bold mb-6 text-center">Upload Bukti Transfer</h2>
+      <form id="transferForm">
+        <label class="block mb-2 font-semibold">Nama:</label>
+        <input type="text" name="nama" class="w-full border p-2 rounded mb-4" required>
 
-      <label>Bank Tujuan:</label>
-      <select name="bank" required>
-        <option value="BACA">BaCA</option>
-        <option value="Mandiri">Mandiri</option>
-        <option value="BNI">BNI</option>
-        <option value="BRI">BRI</option>
-        <option value="QRIS">QRIS</option>
-      </select>
+        <label class="block mb-2 font-semibold">Bank Tujuan:</label>
+        <select name="bank" class="w-full border p-2 rounded mb-4" required>
+          <option value="">Pilih Bank</option>
+          <option value="BCA">BCA</option>
+          <option value="BNI">BNI</option>
+          <option value="BRI">BRI</option>
+          <option value="Mandiri">Mandiri</option>
+          <option value="QRIS">QRIS</option>
+        </select>
 
-      <label>Nominal:</label>
-      <input type="text" name="nominal" required>
+        <label class="block mb-2 font-semibold">Nominal:</label>
+        <input type="number" name="nominal" class="w-full border p-2 rounded mb-4" required>
 
-      <label>Upload Bukti Transfer:</label>
-      <input type="file" name="bukti" required>
+        <label class="block mb-2 font-semibold">Upload Bukti Transfer:</label>
+        <input type="file" id="fileInput" accept="image/*" class="mb-4" required>
 
-      <button type="submit">Kirim</button>
-    </form>
+        <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700">Kirim</button>
+      </form>
 
-    <div class="response" id="responseMsg"></div>
+      <div id="pesan" class="mt-4 text-center text-sm"></div>
+    </div>
 
     <script>
-      document.getElementById("uploadForm").addEventListener("submit", function(e) {
+      document.getElementById("transferForm").addEventListener("submit", function(e) {
         e.preventDefault();
-        var form = e.target;
-        var data = new FormData(form);
+        const fileInput = document.getElementById("fileInput");
+        const file = fileInput.files[0];
 
-        fetch("https://script.google.com/macros/s/AKfycbxudO7njRr9-UMOAfiuPWx4hAxRmhaf_ZIRPyXbl2uNoXuMsGDbuQ4-F7F_pvYi5iZ6bA/exec", {
-          method: "POST",
-          body: data
-        })
-        .then(res => res.text())
-        .then(txt => document.getElementById("responseMsg").innerText = txt)
-        .catch(err => document.getElementById("responseMsg").innerText = "Gagal kirim: " + err.message);
+        if (!file) return alert("Pilih file terlebih dahulu!");
+
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          const base64Data = evt.target.result;
+          const formData = {
+            nama: e.target.nama.value,
+            bank: e.target.bank.value,
+            nominal: e.target.nominal.value,
+            filename: file.name,
+            file: base64Data
+          };
+
+          google.script.run.withSuccessHandler(function(res) {
+            document.getElementById("pesan").innerText = res;
+            document.getElementById("transferForm").reset();
+          }).uploadBuktiTransfer(formData);
+        };
+        reader.readAsDataURL(file);
       });
     </script>
   </body>
