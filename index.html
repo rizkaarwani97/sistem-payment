@@ -4,6 +4,13 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Informasi Pembayaran</title>
+  <link rel="icon" href="https://i.imgur.com/o2wQt8G.png" type="image/png">
+</head>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Informasi Pembayaran</title>
   <style>
     * {
       box-sizing: border-box;
@@ -18,8 +25,23 @@
       color: #333;
     }
 
+    #notif {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background-color: #808080;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      display: none;
+      z-index: 9999;
+      font-weight: bold;
+    }
+
     h1 {
-      margin-top: 40px;
+      margin-top: 60px;
     }
 
     .grid {
@@ -57,11 +79,6 @@
       margin-top: 8px;
     }
 
-    .qris-section {
-      margin: 40px auto;
-      text-align: center;
-    }
-
     .upload {
       margin: 30px auto;
     }
@@ -90,13 +107,20 @@
         margin: 0 auto;
       }
     }
+p {
+  line-height: 1.6;
+  margin-top: -5px;
+}
   </style>
 </head>
 <body>
+  <div id="notif"></div>
+
   <h1>Informasi Pembayaran</h1>
   <p>Silakan lakukan pembayaran ke salah satu rekening berikut:</p>
+
   <div class="grid">
-    <!-- Card 1 -->
+    <!-- Kartu bank (contoh: BCA) -->
     <div class="card">
       <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="BCA">
       <h3>BCA</h3>
@@ -104,7 +128,6 @@
       <p>a.n. Rizka Arwani</p>
       <button class="copy-btn" onclick="copyText('bca')">Salin</button>
     </div>
-    <!-- Card 2 -->
     <div class="card">
       <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/BankNegaraIndonesia46-logo.svg" alt="BNI">
       <h3>BNI</h3>
@@ -112,7 +135,6 @@
       <p>a.n. Rizka Arwani</p>
       <button class="copy-btn" onclick="copyText('bni')">Salin</button>
     </div>
-    <!-- Card 3 -->
     <div class="card">
       <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/BRI_2020.svg" alt="BRI">
       <h3>BRI</h3>
@@ -120,7 +142,6 @@
       <p>a.n. Rizka Arwani</p>
       <button class="copy-btn" onclick="copyText('bri')">Salin</button>
     </div>
-    <!-- Card 4 -->
     <div class="card">
       <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg" alt="Mandiri">
       <h3>Mandiri</h3>
@@ -128,7 +149,6 @@
       <p>a.n. Rizka Arwani</p>
       <button class="copy-btn" onclick="copyText('mandiri')">Salin</button>
     </div>
-    <!-- Card 5 -->
     <div class="card">
       <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/SeaBank.svg" alt="SeaBank">
       <h3>SeaBank</h3>
@@ -136,7 +156,6 @@
       <p>a.n. Rizka Arwani</p>
       <button class="copy-btn" onclick="copyText('seabank')">Salin</button>
     </div>
-    <!-- Card 6 -->
     <div class="card">
       <img src="https://i.imgur.com/j4R3BLB.png" alt="Danamon">
       <h3>Danamon</h3>
@@ -144,7 +163,6 @@
       <p>a.n. Rizka Arwani</p>
       <button class="copy-btn" onclick="copyText('danamon')">Salin</button>
     </div>
-    <!-- Card 7 -->
     <div class="card">
       <img src="https://softwareakuntansi.co.id/wp-content/uploads/2021/09/logo-shopeepay.png" alt="ShopeePay">
       <h3>ShopeePay</h3>
@@ -152,7 +170,6 @@
       <p>a.n. Rizka Arwani</p>
       <button class="copy-btn" onclick="copyText('shopeepay')">Salin</button>
     </div>
-    <!-- Card 8 -->
     <div class="card">
       <img src="https://softwareakuntansi.co.id/wp-content/uploads/2021/09/logo-dana.png" alt="DANA">
       <h3>DANA</h3>
@@ -160,7 +177,6 @@
       <p>a.n. Rizka Arwani</p>
       <button class="copy-btn" onclick="copyText('dana')">Salin</button>
     </div>
-    <!-- Card 9 -->
     <div class="card">
       <img src="https://i.imgur.com/u0NK6C1.png" alt="GoPay">
       <h3>GoPay</h3>
@@ -168,6 +184,10 @@
       <p>a.n. Rizka Arwani</p>
       <button class="copy-btn" onclick="copyText('gopay')">Salin</button>
     </div>
+  </div>
+
+
+
   </div>
 
   <div class="upload">
@@ -178,7 +198,14 @@
     function copyText(id) {
       const text = document.getElementById(id).innerText;
       navigator.clipboard.writeText(text).then(() => {
-        alert('Rekening berhasil disalin: ' + text);
+        const notif = document.getElementById('notif');
+        notif.innerText = 'Rekening berhasil disalin: ' + text;
+        notif.style.display = 'block';
+
+        // Hilangkan notifikasi setelah 3 detik
+        setTimeout(() => {
+          notif.style.display = 'none';
+        }, 3000);
       });
     }
   </script>
