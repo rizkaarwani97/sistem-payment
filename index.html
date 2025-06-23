@@ -5,195 +5,626 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Informasi Pembayaran</title>
   <link rel="icon" href="https://i.imgur.com/78Xkxd6.png" type="image/png">
-</head>
-
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Informasi Pembayaran</title>
   <style>
     * {
       box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
 
     body {
-      font-family: Arial, sans-serif;
-      background: #fff;
-      margin: 0;
-      padding: 0;
-      text-align: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
       color: #333;
+      line-height: 1.6;
     }
 
-#notif {
+    /* Notification Styles */
+    #notif {
       position: fixed;
       top: 20px;
       left: 50%;
       transform: translateX(-50%);
-      background-color: #808080;
+      background: linear-gradient(45deg, #4CAF50, #45a049);
       color: white;
-      padding: 12px 24px;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+      padding: 15px 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
       display: none;
       z-index: 9999;
       font-weight: bold;
+      animation: slideDown 0.3s ease-out;
     }
 
-
-    h1 {
-      margin-top: 60px;
+    @keyframes slideDown {
+      from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
+      to { transform: translateX(-50%) translateY(0); opacity: 1; }
     }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
-      padding: 40px 20px;
-      max-width: 1000px;
-      margin: auto;
+    /* Warning Popup */
+    .warning-popup {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10000;
     }
 
-    .card {
-      background: #f9f9f9;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    .warning-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      text-align: center;
+      max-width: 400px;
+      margin: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
     }
 
-    .card img {
-      height: 40px;
+    .warning-content img {
+      width: 60px;
+      height: 60px;
+      margin-bottom: 15px;
+    }
+
+    .warning-content h3 {
+      color: #ff6b6b;
+      margin-bottom: 15px;
+      font-size: 1.4em;
+    }
+
+    .warning-content p {
+      margin-bottom: 20px;
+      color: #666;
+    }
+
+    .close-warning {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+
+    .close-warning:hover {
+      background: #ff5252;
+    }
+
+    /* Header */
+    .header {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 20px 0;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      color: white;
+      font-size: 2.5em;
       margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
-    .card h3 {
-      margin: 10px 0 5px;
+    .header p {
+      color: rgba(255, 255, 255, 0.9);
+      font-size: 1.1em;
+    }
+
+    /* Instructions */
+    .instructions {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 15px;
+      padding: 25px;
+      margin: 20px auto;
+      max-width: 1000px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .instructions h2 {
+      color: #4a4a4a;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .instructions ol {
+      color: #666;
+      padding-left: 20px;
+    }
+
+    .instructions li {
+      margin-bottom: 8px;
+      padding-left: 5px;
+    }
+
+    /* Container */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 20px;
+    }
+
+    /* QRIS Section */
+    .qris-section {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 30px;
+      margin: 30px auto;
+      max-width: 500px;
+      text-align: center;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      border: 3px solid #00d4aa;
+    }
+
+    .qris-section h2 {
+      color: #00d4aa;
+      margin-bottom: 20px;
+      font-size: 1.8em;
+    }
+
+    .qris-code {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      margin: 20px 0;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .qris-code:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .qris-code img {
+      max-width: 150px;
+      width: 100%;
+      height: auto;
+      border-radius: 10px;
+      transition: all 0.3s ease;
+    }
+
+    /* QRIS Modal */
+    .qris-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 10001;
+      backdrop-filter: blur(5px);
+    }
+
+    .qris-modal-content {
+      background: white;
+      padding: 30px;
+      border-radius: 20px;
+      text-align: center;
+      max-width: 90%;
+      max-height: 90%;
+      position: relative;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .qris-modal img {
+      max-width: 400px;
+      width: 100%;
+      height: auto;
+      border-radius: 15px;
+      margin: 20px 0;
+    }
+
+    .close-qris {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 35px;
+      height: 35px;
+      cursor: pointer;
+      font-size: 18px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .close-qris:hover {
+      background: #ff5252;
+      transform: scale(1.1);
+    }
+
+    .qris-note {
+      background: linear-gradient(45deg, #00d4aa, #00bfa5);
+      color: white;
+      padding: 15px;
+      border-radius: 10px;
+      margin-top: 15px;
+      font-weight: bold;
+    }
+
+    /* Grid Layout */
+    .payment-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 25px;
+      padding: 30px 0;
+    }
+
+    .payment-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      border: 2px solid transparent;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .payment-card img {
+      height: 50px;
+      width: auto;
+      margin-bottom: 15px;
+      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+    }
+
+    .account-info {
+      background: #f8f9fa;
+      border-radius: 10px;
+      padding: 15px;
+      margin: 15px 0;
+      border-left: 4px solid #667eea;
+      display: flex;
+      justify-content: space-between; /* Pastikan tombol salin berada di sebelah kanan */
+      align-items: center;
+    }
+
+    .account-details {
+      flex: 1;
+    }
+
+    .account-number {
+      font-family: 'Courier New', monospace;
+      font-size: 1.1em;
+      font-weight: bold;
+      color: #2c3e50;
+      margin-bottom: 5px;
+    }
+
+    .account-name {
+      color: #666;
+      font-size: 0.9em;
     }
 
     .copy-btn {
-      background-color: #00aaff;
-      color: #fff;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
       border: none;
-      border-radius: 5px;
-      padding: 6px 12px;
+      border-radius: 25px;
+      padding: 10px 20px;
       cursor: pointer;
-      margin-top: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+      white-space: nowrap;
+      font-size: 0.9em;
     }
 
-    .upload {
-      margin: 30px auto;
+    .copy-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
     }
 
-    .upload a {
-      background: #00bcd4;
-      color: #fff;
-      padding: 12px 24px;
+    .copy-btn:active {
+      transform: translateY(0);
+    }
+
+    /* Upload Section */
+    .upload-section {
+      text-align: center;
+      margin: 50px 0;
+    }
+
+    .upload-btn {
+      background: linear-gradient(45deg, #00d4aa, #00bfa5);
+      color: white;
+      padding: 15px 40px;
       text-decoration: none;
-      border-radius: 8px;
+      border-radius: 30px;
+      font-size: 1.1em;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
+      display: inline-block;
     }
 
+    .upload-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 212, 170, 0.4);
+    }
+
+    /* Warning Button */
+    .warning-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      cursor: pointer;
+      font-size: 1.2em;
+      z-index: 1000;
+      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+      transition: all 0.3s ease;
+    }
+
+    .warning-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+    }
+
+    /* Mobile Responsive */
     @media (max-width: 768px) {
-      .grid {
-        grid-template-columns: repeat(2, 1fr);
+      .header h1 {
+        font-size: 2em;
+      }
+
+      .payment-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px 0;
+      }
+
+      .payment-card {
+        margin: 0 10px;
+      }
+
+      .qris-section {
+        margin: 20px 10px;
+        padding: 20px;
+      }
+
+      .instructions {
+        margin: 20px 10px;
+        padding: 20px;
+      }
+
+      .warning-btn {
+        top: 15px;
+        right: 15px;
+        width: 45px;
+        height: 45px;
       }
     }
 
     @media (max-width: 480px) {
-      .grid {
-        grid-template-columns: 1fr;
+      .container {
+        padding: 0 10px;
       }
 
-      .card {
-        max-width: 90%;
-        margin: 0 auto;
+      .header h1 {
+        font-size: 1.8em;
+      }
+
+      .payment-card {
+        padding: 20px;
+      }
+
+      .qris-code img {
+        max-width: 120px;
+      }
+
+      .qris-modal img {
+        max-width: 300px;
       }
     }
-.card p {
-  line-height: 1.3;
-  margin: 4px 0;
-}
-
   </style>
 </head>
 <body>
+  <!-- Notification -->
   <div id="notif"></div>
 
-  <h1>Informasi Pembayaran</h1>
-  <p>Silakan lakukan pembayaran ke salah satu rekening berikut:</p>
+  <!-- Warning Button -->
+  <button class="warning-btn" onclick="showWarning()" title="Informasi Maintenance">⚠️</button>
 
-  <div class="grid">
-    <!-- Kartu bank (contoh: BCA) -->
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="BCA">
-      <h3>BCA</h3>
-      <p id="bca">8365478640</p>
-      <p>a.n. Rizka Arwani</p>
-      <button class="copy-btn" onclick="copyText('bca')">Salin</button>
-    </div>
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/BankNegaraIndonesia46-logo.svg" alt="BNI">
-      <h3>BNI</h3>
-      <p id="bni">0837947494</p>
-      <p>a.n. Rizka Arwani</p>
-      <button class="copy-btn" onclick="copyText('bni')">Salin</button>
-    </div>
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/BRI_2020.svg" alt="BRI">
-      <h3>BRI</h3>
-      <p id="bri">592801047177534</p>
-      <p>a.n. Rizka Arwani</p>
-      <button class="copy-btn" onclick="copyText('bri')">Salin</button>
-    </div>
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg" alt="Mandiri">
-      <h3>Mandiri</h3>
-      <p id="mandiri">1840003632856</p>
-      <p>a.n. Rizka Arwani</p>
-      <button class="copy-btn" onclick="copyText('mandiri')">Salin</button>
-    </div>
-    <div class="card">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/SeaBank.svg" alt="SeaBank">
-      <h3>SeaBank</h3>
-      <p id="seabank">901010934880</p>
-      <p>a.n. Rizka Arwani</p>
-      <button class="copy-btn" onclick="copyText('seabank')">Salin</button>
-    </div>
-    <div class="card">
-      <img src="https://i.imgur.com/j4R3BLB.png" alt="Danamon">
-      <h3>Danamon</h3>
-      <p id="danamon">003607068578</p>
-      <p>a.n. Rizka Arwani</p>
-      <button class="copy-btn" onclick="copyText('danamon')">Salin</button>
-    </div>
-    <div class="card">
-      <img src="https://softwareakuntansi.co.id/wp-content/uploads/2021/09/logo-shopeepay.png" alt="ShopeePay">
-      <h3>ShopeePay</h3>
-      <p id="shopeepay">082326525782</p>
-      <p>a.n. Rizka Arwani</p>
-      <button class="copy-btn" onclick="copyText('shopeepay')">Salin</button>
-    </div>
-    <div class="card">
-      <img src="https://softwareakuntansi.co.id/wp-content/uploads/2021/09/logo-dana.png" alt="DANA">
-      <h3>DANA</h3>
-      <p id="dana">082326525782</p>
-      <p>a.n. Rizka Arwani</p>
-      <button class="copy-btn" onclick="copyText('dana')">Salin</button>
-    </div>
-    <div class="card">
-      <img src="https://i.imgur.com/u0NK6C1.png" alt="GoPay">
-      <h3>GoPay</h3>
-      <p id="gopay">082326525782</p>
-      <p>a.n. Rizka Arwani</p>
-      <button class="copy-btn" onclick="copyText('gopay')">Salin</button>
+  <!-- QRIS Modal -->
+  <div class="qris-modal" id="qrisModal">
+    <div class="qris-modal-content">
+      <button class="close-qris" onclick="closeQris()">×</button>
+      <h2 style="color: #00d4aa; margin-bottom: 20px;">🔥 Scan QRIS Code</h2>
+      <img src="https://i.imgur.com/NMgUAXS.png" alt="QRIS Code Large">
+      <p style="margin: 20px 0; color: #666; font-size: 1.1em;">
+        <strong>Semua Bank & E-Wallet Supported!</strong><br>
+        Scan dengan kamera aplikasi banking atau e-wallet Anda
+      </p>
+      <div style="background: linear-gradient(45deg, #00d4aa, #00bfa5); color: white; padding: 15px; border-radius: 10px; margin-top: 20px;">
+        💡 <strong>Tips:</strong> Pastikan QR code terlihat jelas di layar
+      </div>
     </div>
   </div>
 
-
-
+  <div class="warning-popup" id="warningPopup">
+    <div class="warning-content">
+      <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" alt="Warning">
+      <h3>⚠️ Informasi Maintenance</h3>
+      <p>Saat ini semua layanan perbankan aman terkendali. Tapi kalau proses transfernya tiba tiba baper, jangan disimpan sendiri... curhat aja ke admin yaaaa.... 🥰🥰🥰</p>
+      <p><strong>Terima Kasih</strong> 😊</p>
+      <button class="close-warning" onclick="closeWarning()">Tutup</button>
+    </div>
   </div>
 
-  <div class="upload">
-    <a href="form.html">Lanjut ke Upload Bukti</a>
+  <!-- Header -->
+  <div class="header">
+    <h1>💳 Informasi Pembayaran</h1>
+    <p>Pilih metode pembayaran yang tersedia di bawah ini</p>
+  </div>
+
+  <div class="container">
+    <!-- Instructions -->
+    <div class="instructions">
+      <h2>📋 Petunjuk Cara Pembayaran</h2>
+      <ol>
+        <li><strong>Pilih metode pembayaran</strong> yang Anda miliki dari daftar di bawah</li>
+        <li><strong>Klik tombol "Salin"</strong> untuk menyalin nomor rekening/akun</li>
+        <li><strong>Buka aplikasi banking/e-wallet</strong> Anda</li>
+        <li><strong>Lakukan transfer</strong> sesuai nominal yang diminta</li>
+        <li><strong>Simpan bukti transfer</strong> (screenshot/foto)</li>
+        <li><strong>Klik "Lanjut ke Upload Bukti"</strong> untuk mengunggah bukti pembayaran</li>
+        <li><strong>Tunggu konfirmasi</strong> dari admin (max 24 jam)</li>
+      </ol>
+    </div>
+
+    <!-- QRIS Section -->
+    <div class="qris-section">
+      <h2>🔥 QRIS - Pembayaran Tercepat!</h2>
+      <p>Scan QR Code di bawah dengan aplikasi e-wallet atau mobile banking Anda</p>
+      <div class="qris-code" onclick="openQris()">
+        <img src="https://i.imgur.com/NMgUAXS.png" alt="QRIS Code">
+        <p><strong>Klik untuk memperbesar</strong></p>
+        <p style="font-size: 0.9em; color: #666;">Semua E-Wallet & Mobile Banking</p>
+      </div>
+      <div class="qris-note">
+        💡 Tip: QRIS support semua bank dan e-wallet!
+      </div>
+    </div>
+
+    <!-- Payment Grid -->
+    <div class="payment-grid">
+      <!-- Bank Cards -->
+      <div class="payment-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="BCA">
+        <h3>BCA</h3>
+        <div class="account-info">
+          <div class="account-details">
+            <div class="account-number" id="bca">8365478640</div>
+            <div class="account-name">a.n. Rizka Arwani</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('bca')">📋 Salin</button>
+        </div>
+      </div>
+
+      <div class="payment-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/27/BankNegaraIndonesia46-logo.svg" alt="BNI">
+        <h3>BNI</h3>
+        <div class="account-info">
+          <div class="account-details">
+            <div class="account-number" id="bni">0837947494</div>
+            <div class="account-name">a.n. Rizka Arwani</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('bni')">📋 Salin</button>
+        </div>
+      </div>
+
+      <div class="payment-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/2/2e/BRI_2020.svg" alt="BRI">
+        <h3>BRI</h3>
+        <div class="account-info">
+          <div class="account-details">
+            <div class="account-number" id="bri">592801047177534</div>
+            <div class="account-name">a.n. Rizka Arwani</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('bri')">📋 Salin</button>
+        </div>
+      </div>
+
+      <div class="payment-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg" alt="Mandiri">
+        <h3>Mandiri</h3>
+        <div class="account-info">
+          <div class="account-details">
+            <div class="account-number" id="mandiri">1840003632856</div>
+            <div class="account-name">a.n. Rizka Arwani</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('mandiri')">📋 Salin</button>
+        </div>
+      </div>
+
+      <div class="payment-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/SeaBank.svg" alt="SeaBank">
+        <h3>SeaBank</h3>
+        <div class="account-info">
+          <div class="account-details">
+            <div class="account-number" id="seabank">901010934880</div>
+            <div class="account-name">a.n. Rizka Arwani</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('seabank')">📋 Salin</button>
+        </div>
+      </div>
+
+      <div class="payment-card">
+        <img src="https://i.imgur.com/j4R3BLB.png" alt="Danamon">
+        <h3>Danamon</h3>
+        <div class="account-info">
+          <div class="account-details">
+            <div class="account-number" id="danamon">003607068578</div>
+            <div class="account-name">a.n. Rizka Arwani</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('danamon')">📋 Salin</button>
+        </div>
+      </div>
+
+      <div class="payment-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/38/CIMB_Niaga_logo.svg/1920px-CIMB_Niaga_logo.svg.png?20250514031926" alt="CIMB Niaga">
+        <h3>CIMB Niaga</h3>
+        <div class="account-info">
+          <div class="account-details">
+            <div class="account-number" id="CIMB Niaga">707538102300</div>
+            <div class="account-name">a.n. Rizka Arwani</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('CIMB Niaga')">📋 Salin</button>
+        </div>
+      </div>
+
+      <div class="payment-card">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/BTN_2024.svg/1920px-BTN_2024.svg.png?20240303202616" alt="BTN">
+        <h3>BTN</h3>
+        <div class="account-info">
+          <div class="account-details">
+            <div class="account-number" id="BTN">18201700001239</div>
+            <div class="account-name">a.n. Rizka Arwani</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('BTN')">📋 Salin</button>
+        </div>
+      </div>
+
+      <div class="payment-card">
+        <img src="https://i.imgur.com/pTmQD7N.png" alt="ShopeePay, Dana, Gopay">
+        <h3>ShopeePay, Dana, Gopay</h3>
+        <div class="account-info">
+          <div class="account-details">
+            <div class="account-number" id="ShopeePay, Dana, Gopay">082326525782</div>
+            <div class="account-name">a.n. Rizka Arwani</div>
+          </div>
+          <button class="copy-btn" onclick="copyText('ShopeePay, Dana, Gopay')">📋 Salin</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Upload Section -->
+    <div class="upload-section">
+      <a href="form.html" class="upload-btn">🚀 Lanjut ke Upload Bukti</a>
+    </div>
   </div>
 
   <script>
@@ -201,15 +632,58 @@
       const text = document.getElementById(id).innerText;
       navigator.clipboard.writeText(text).then(() => {
         const notif = document.getElementById('notif');
-        notif.innerText = 'Rekening berhasil disalin: ' + text;
+        notif.innerHTML = `✅ Berhasil disalin: <strong>${text}</strong>`;
         notif.style.display = 'block';
 
-        // Hilangkan notifikasi setelah 3 detik
+        setTimeout(() => {
+          notif.style.display = 'none';
+        }, 3000);
+      }).catch(() => {
+        // Fallback for older browsers
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        const notif = document.getElementById('notif');
+        notif.innerHTML = `✅ Berhasil disalin: <strong>${text}</strong>`;
+        notif.style.display = 'block';
+        
         setTimeout(() => {
           notif.style.display = 'none';
         }, 3000);
       });
     }
+
+    function showWarning() {
+      document.getElementById('warningPopup').style.display = 'flex';
+    }
+
+    function closeWarning() {
+      document.getElementById('warningPopup').style.display = 'none';
+    }
+
+    function openQris() {
+      document.getElementById('qrisModal').style.display = 'flex';
+    }
+
+    function closeQris() {
+      document.getElementById('qrisModal').style.display = 'none';
+    }
+
+    // Close modal when clicking outside
+    document.getElementById('qrisModal').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeQris();
+      }
+    });
+
+    // Auto show warning on page load (optional)
+    // window.onload = function() {
+    //   setTimeout(showWarning, 2000);
+    // };
   </script>
 </body>
 </html>
