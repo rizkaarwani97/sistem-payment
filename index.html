@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Informasi Pembayaran</title>
   <link rel="icon" href="https://i.imgur.com/78Xkxd6.png" type="image/png">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     * {
       box-sizing: border-box;
@@ -18,6 +19,7 @@
       min-height: 100vh;
       color: #333;
       line-height: 1.6;
+      overflow-x: hidden;
     }
 
     /* Notification Styles */
@@ -56,14 +58,27 @@
       z-index: 10000;
     }
 
+    .warning-popup-inner {
+      display: flex;
+      width: 800px;
+      max-width: 90%;
+      transition: transform 0.5s ease;
+    }
+
+    .warning-page {
+      min-width: 100%;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
     .warning-content {
       background: white;
       padding: 30px;
       border-radius: 15px;
       text-align: center;
-      max-width: 400px;
-      margin: 20px;
+      width: 100%;
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      position: relative;
     }
 
     .warning-content img {
@@ -97,6 +112,36 @@
     .close-warning:hover {
       background: #ff5252;
     }
+
+    /* Contact Methods */
+    .contact-methods {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .contact-btn {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px;
+      border-radius: 10px;
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    .contact-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .whatsapp { background-color: #25D366; }
+    .instagram { background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); }
+    .facebook { background-color: #1877F2; }
+    .email { background-color: #EA4335; }
 
     /* Header */
     .header {
@@ -278,12 +323,19 @@
       position: relative;
       overflow: hidden;
     }
+    
+    .payment-card h3 {
+      text-align: center;
+      margin: 10px 0;
+    }
 
     .payment-card img {
       height: 50px;
       width: auto;
       margin-bottom: 15px;
       filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+      display: block;
+      margin: 0 auto;
     }
 
     .account-info {
@@ -293,7 +345,7 @@
       margin: 15px 0;
       border-left: 4px solid #667eea;
       display: flex;
-      justify-content: space-between; /* Pastikan tombol salin berada di sebelah kanan */
+      justify-content: space-between;
       align-items: center;
     }
 
@@ -384,6 +436,11 @@
       box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
     }
 
+    /* Admin Panel (hidden) */
+    .admin-panel {
+      display: none;
+    }
+
     /* Mobile Responsive */
     @media (max-width: 768px) {
       .header h1 {
@@ -438,6 +495,24 @@
       .qris-modal img {
         max-width: 300px;
       }
+
+      .contact-btn {
+        font-size: 14px;
+        padding: 12px;
+      }
+    }
+
+    /* Animasi Slide */
+    .slide-left {
+      transform: translateX(-100%);
+    }
+
+    .slide-right {
+      transform: translateX(0);
+    }
+
+    .warning-popup-inner {
+      transition: transform 0.5s ease;
     }
   </style>
 </head>
@@ -456,7 +531,6 @@
       <img src="https://i.imgur.com/NMgUAXS.png" alt="QRIS Code Large">
       <p style="margin: 20px 0; color: #666; font-size: 1.1em;">
         <strong>Semua Bank & E-Wallet Supported!</strong><br>
-        Scan dengan kamera aplikasi banking atau e-wallet Anda
       </p>
       <div style="background: linear-gradient(45deg, #00d4aa, #00bfa5); color: white; padding: 15px; border-radius: 10px; margin-top: 20px;">
         💡 <strong>Tips:</strong> Pastikan QR code terlihat jelas di layar
@@ -464,13 +538,51 @@
     </div>
   </div>
 
+  <!-- Warning Popup dengan 2 halaman -->
   <div class="warning-popup" id="warningPopup">
-    <div class="warning-content">
-      <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" alt="Warning">
-      <h3>⚠️ Informasi Maintenance</h3>
-      <p>Saat ini semua layanan perbankan aman terkendali. Tapi kalau proses transfernya tiba tiba baper, jangan disimpan sendiri... curhat aja ke admin yaaaa.... 🥰🥰🥰</p>
-      <p><strong>Terima Kasih</strong> 😊</p>
-      <button class="close-warning" onclick="closeWarning()">Tutup</button>
+    <div class="warning-popup-inner" id="warningPopupInner">
+      <!-- Halaman 1: Warning -->
+      <div class="warning-page">
+        <div class="warning-content">
+          <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" alt="Warning">
+          <h3>⚠️ Informasi Maintenance</h3>
+          <p>Saat ini semua layanan perbankan aman terkendali. Tapi kalau proses transfernya tiba tiba baper, jangan disimpan sendiri... curhat aja ke admin yaaaa.... 🥰🥰🥰</p>
+          <p><strong>Terima Kasih</strong> 😊</p>
+          <button class="close-warning" onclick="closeWarning()">Tutup</button>
+          <button class="contact-admin-btn" onclick="showAdminContact()" style="margin-top: 15px; background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
+            <i class="fas fa-headset"></i> Hubungi Admin
+          </button>
+        </div>
+      </div>
+      
+      <!-- Halaman 2: Kontak Admin -->
+      <div class="warning-page">
+        <div class="warning-content">
+          <div class="admin-header">
+            <h3>📞 Kontak Admin</h3>
+            <button class="close-admin" onclick="backToWarning()">← Kembali</button>
+          </div>
+          
+          <div class="contact-methods">
+            <a href="https://wa.me/6282326525782" class="contact-btn whatsapp" target="_blank">
+              <i class="fab fa-whatsapp"></i> WhatsApp: 0823-2652-5782
+            </a>
+            <a href="https://instagram.com/rizka_arwani" class="contact-btn instagram" target="_blank">
+              <i class="fab fa-instagram"></i> Instagram: @rizka_arwani
+            </a>
+            <a href="https://facebook.com/rizka.arwani" class="contact-btn facebook" target="_blank">
+              <i class="fab fa-facebook"></i> Facebook: Rizka Arwani
+            </a>
+            <a href="mailto:rizkaarwani77@gmail.com" class="contact-btn email" target="_blank">
+              <i class="fas fa-envelope"></i> Email: rizkaarwani77@gmail.com
+            </a>
+          </div>
+          
+          <p style="margin-top: 20px; color: #666; text-align: center;">
+            Hubungi admin jika ada pertanyaan atau kendala dalam pembayaran
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -483,29 +595,29 @@
   <div class="container">
     <!-- Instructions -->
     <div class="instructions">
-      <h2>📋 Petunjuk Cara Pembayaran</h2>
+      <h2>📋 Petunjuk Pembayaran</h2>
       <ol>
         <li><strong>Pilih metode pembayaran</strong> yang Anda miliki dari daftar di bawah</li>
         <li><strong>Klik tombol "Salin"</strong> untuk menyalin nomor rekening/akun</li>
-        <li><strong>Buka aplikasi banking/e-wallet</strong> Anda</li>
+        <li><strong>Buka aplikasi mobile banking/e-wallet/datang ke ATM</strong> terdekat sekitar anda</li>
         <li><strong>Lakukan transfer</strong> sesuai nominal yang diminta</li>
         <li><strong>Simpan bukti transfer</strong> (screenshot/foto)</li>
-        <li><strong>Klik "Lanjut ke Upload Bukti"</strong> untuk mengunggah bukti pembayaran</li>
+        <li><strong>Klik "Lanjut ke Upload Bukti" atau konfirmasi ke admin</strong> untuk mengunggah bukti pembayaran</li>
         <li><strong>Tunggu konfirmasi</strong> dari admin (max 24 jam)</li>
       </ol>
     </div>
 
     <!-- QRIS Section -->
     <div class="qris-section">
-      <h2>🔥 QRIS - Pembayaran Tercepat!</h2>
-      <p>Scan QR Code di bawah dengan aplikasi e-wallet atau mobile banking Anda</p>
+      <h2>🔥 QRIS - ALL PAYMENT</h2>
+      <p>Scan QRIS ini dengan e-wallet/mobile banking Anda</p>
       <div class="qris-code" onclick="openQris()">
         <img src="https://i.imgur.com/NMgUAXS.png" alt="QRIS Code">
         <p><strong>Klik untuk memperbesar</strong></p>
         <p style="font-size: 0.9em; color: #666;">Semua E-Wallet & Mobile Banking</p>
       </div>
       <div class="qris-note">
-        💡 Tip: QRIS support semua bank dan e-wallet!
+        💡 QRIS support semua bank dan e-wallet!
       </div>
     </div>
 
@@ -589,10 +701,10 @@
         <h3>CIMB Niaga</h3>
         <div class="account-info">
           <div class="account-details">
-            <div class="account-number" id="CIMB Niaga">707538102300</div>
+            <div class="account-number" id="cimb">707538102300</div>
             <div class="account-name">a.n. Rizka Arwani</div>
           </div>
-          <button class="copy-btn" onclick="copyText('CIMB Niaga')">📋 Salin</button>
+          <button class="copy-btn" onclick="copyText('cimb')">📋 Salin</button>
         </div>
       </div>
 
@@ -601,10 +713,10 @@
         <h3>BTN</h3>
         <div class="account-info">
           <div class="account-details">
-            <div class="account-number" id="BTN">18201700001239</div>
+            <div class="account-number" id="btn">18201700001239</div>
             <div class="account-name">a.n. Rizka Arwani</div>
           </div>
-          <button class="copy-btn" onclick="copyText('BTN')">📋 Salin</button>
+          <button class="copy-btn" onclick="copyText('btn')">📋 Salin</button>
         </div>
       </div>
 
@@ -613,10 +725,10 @@
         <h3>ShopeePay, Dana, Gopay</h3>
         <div class="account-info">
           <div class="account-details">
-            <div class="account-number" id="ShopeePay, Dana, Gopay">082326525782</div>
+            <div class="account-number" id="ewallet">082326525782</div>
             <div class="account-name">a.n. Rizka Arwani</div>
           </div>
-          <button class="copy-btn" onclick="copyText('ShopeePay, Dana, Gopay')">📋 Salin</button>
+          <button class="copy-btn" onclick="copyText('ewallet')">📋 Salin</button>
         </div>
       </div>
     </div>
@@ -627,7 +739,11 @@
     </div>
   </div>
 
+  <!-- Admin Panel (hidden) -->
+  <div class="admin-panel" id="adminPanel"></div>
+
   <script>
+    // Fungsi untuk copy text
     function copyText(id) {
       const text = document.getElementById(id).innerText;
       navigator.clipboard.writeText(text).then(() => {
@@ -639,7 +755,7 @@
           notif.style.display = 'none';
         }, 3000);
       }).catch(() => {
-        // Fallback for older browsers
+        // Fallback untuk browser lama
         const textArea = document.createElement('textarea');
         textArea.value = text;
         document.body.appendChild(textArea);
@@ -657,14 +773,27 @@
       });
     }
 
+    // Fungsi untuk popup warning
     function showWarning() {
       document.getElementById('warningPopup').style.display = 'flex';
+      document.getElementById('warningPopupInner').classList.remove('slide-left');
     }
 
     function closeWarning() {
       document.getElementById('warningPopup').style.display = 'none';
     }
 
+    // Fungsi untuk menampilkan kontak admin di dalam popup
+    function showAdminContact() {
+      document.getElementById('warningPopupInner').classList.add('slide-left');
+    }
+
+    // Fungsi untuk kembali ke warning
+    function backToWarning() {
+      document.getElementById('warningPopupInner').classList.remove('slide-left');
+    }
+
+    // Fungsi untuk modal QRIS
     function openQris() {
       document.getElementById('qrisModal').style.display = 'flex';
     }
@@ -673,17 +802,18 @@
       document.getElementById('qrisModal').style.display = 'none';
     }
 
-    // Close modal when clicking outside
+    // Close modal ketika klik di luar
     document.getElementById('qrisModal').addEventListener('click', function(e) {
       if (e.target === this) {
         closeQris();
       }
     });
 
-    // Auto show warning on page load (optional)
-    // window.onload = function() {
-    //   setTimeout(showWarning, 2000);
-    // };
+    document.getElementById('warningPopup').addEventListener('click', function(e) {
+      if (e.target === this) {
+        closeWarning();
+      }
+    });
   </script>
 </body>
 </html>
