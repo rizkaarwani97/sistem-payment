@@ -1,825 +1,1321 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Informasi Pembayaran</title>
-  <link rel="icon" href="https://i.imgur.com/78Xkxd6.png" type="image/png">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-  <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      color: #333;
-      line-height: 1.6;
-      overflow-x: hidden;
-    }
-
-    /* Notification Styles */
-    #notif {
-      position: fixed;
-      top: 20px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: linear-gradient(45deg, #4CAF50, #45a049);
-      color: white;
-      padding: 6px 12px;
-      border-radius: 8px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-      display: none;
-      z-index: 9999;
-      font-weight: normal;
-	  font-size: 18px;
-      animation: slideDown 0.3s ease-out;
-	  width: fit-content;
-	  max-width: 90%;
-	  white-space: nowrap;
-	  line-height: 1.2;
-    }
-
-    @keyframes slideDown {
-      from { transform: translateX(-50%) translateY(-20px); opacity: 0; }
-      to { transform: translateX(-50%) translateY(0); opacity: 1; }
-    }
-
-    /* Warning Popup */
-    .warning-popup {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 10000;
-    }
-
-    .warning-popup-inner {
-      display: flex;
-      width: 800px;
-      max-width: 90%;
-      transition: transform 0.5s ease;
-    }
-
-    .warning-page {
-      min-width: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-    }
-
-    .warning-content {
-      background: white;
-      padding: 30px;
-      border-radius: 15px;
-      text-align: center;
-      width: 100%;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      position: relative;
-    }
-
-    .warning-content img {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 15px;
-    }
-
-    .warning-content h3 {
-      color: #ff6b6b;
-      margin-bottom: 15px;
-      font-size: 1.4em;
-    }
-
-    .warning-content p {
-      margin-bottom: 20px;
-      color: #666;
-    }
-
-    .close-warning {
-      background: #ff6b6b;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: background 0.3s;
-    }
-
-    .close-warning:hover {
-      background: #ff5252;
-    }
-
-    /* Contact Methods */
-    .contact-methods {
-      display: flex;
-      flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
-    }
-
-    .contact-btn {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 15px;
-      border-radius: 10px;
-      color: white;
-      text-decoration: none;
-      font-weight: bold;
-      transition: all 0.3s;
-    }
-
-    .contact-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .whatsapp { background-color: #25D366; }
-    .instagram { background: linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D); }
-    .facebook { background-color: #1877F2; }
-    .email { background-color: #EA4335; }
-
-    /* Header */
-    .header {
-      background: rgba(255, 255, 255, 0.1);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 20px 0;
-      text-align: center;
-      margin-bottom: 30px;
-    }
-
-    .header h1 {
-      color: white;
-      font-size: 2.5em;
-      margin-bottom: 10px;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-    }
-
-    .header p {
-      color: rgba(255, 255, 255, 0.9);
-      font-size: 1.1em;
-    }
-
-    /* Instructions */
-    .instructions {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 15px;
-      padding: 25px;
-      margin: 20px auto;
-      max-width: 1000px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-    }
-
-    .instructions h2 {
-      color: #4a4a4a;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .instructions ol {
-      color: #666;
-      padding-left: 20px;
-    }
-
-    .instructions li {
-      margin-bottom: 8px;
-      padding-left: 5px;
-    }
-
-    /* Container */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 20px;
-    }
-
-    /* QRIS Section */
-    .qris-section {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      padding: 30px;
-      margin: 30px auto;
-      max-width: 500px;
-      text-align: center;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      border: 3px solid #00d4aa;
-    }
-
-    .qris-section h2 {
-      color: #00d4aa;
-      margin-bottom: 20px;
-      font-size: 1.8em;
-    }
-
-    .qris-code {
-      background: white;
-      padding: 20px;
-      border-radius: 15px;
-      margin: 20px 0;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-
-    .qris-code:hover {
-      transform: scale(1.02);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
-    }
-
-    .qris-code img {
-      max-width: 150px;
-      width: 100%;
-      height: auto;
-      border-radius: 10px;
-      transition: all 0.3s ease;
-    }
-
-    /* QRIS Modal */
-    .qris-modal {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.9);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      z-index: 10001;
-      backdrop-filter: blur(5px);
-    }
-
-    .qris-modal-content {
-      background: white;
-      padding: 30px;
-      border-radius: 20px;
-      text-align: center;
-      max-width: 90%;
-      max-height: 90%;
-      position: relative;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-    }
-
-    .qris-modal img {
-      max-width: 400px;
-      width: 100%;
-      height: auto;
-      border-radius: 15px;
-      margin: 20px 0;
-    }
-
-    .close-qris {
-      position: absolute;
-      top: 15px;
-      right: 20px;
-      background: #ff6b6b;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 35px;
-      height: 35px;
-      cursor: pointer;
-      font-size: 18px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-    }
-
-    .close-qris:hover {
-      background: #ff5252;
-      transform: scale(1.1);
-    }
-
-    .qris-note {
-      background: linear-gradient(45deg, #00d4aa, #00bfa5);
-      color: white;
-      padding: 15px;
-      border-radius: 10px;
-      margin-top: 15px;
-      font-weight: bold;
-    }
-
-    /* Grid Layout */
-    .payment-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 25px;
-      padding: 30px 0;
-    }
-
-    .payment-card {
-      background: rgba(255, 255, 255, 0.95);
-      border-radius: 20px;
-      padding: 25px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-      transition: all 0.3s ease;
-      border: 2px solid transparent;
-      position: relative;
-      overflow: hidden;
-    }
-    
-    .payment-card h3 {
-      text-align: center;
-      margin: 10px 0;
-    }
-
-    .payment-card img {
-      height: 50px;
-      width: auto;
-      margin-bottom: 15px;
-      filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
-      display: block;
-      margin: 0 auto;
-    }
-
-    .account-info {
-      background: #f8f9fa;
-      border-radius: 10px;
-      padding: 15px;
-      margin: 15px 0;
-      border-left: 4px solid #667eea;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .account-details {
-      flex: 1;
-    }
-
-    .account-number {
-      font-family: 'Courier New', monospace;
-      font-size: 1.1em;
-      font-weight: bold;
-      color: #2c3e50;
-      margin-bottom: 5px;
-    }
-
-    .account-name {
-      color: #666;
-      font-size: 0.9em;
-    }
-
-    .copy-btn {
-      background: linear-gradient(45deg, #667eea, #764ba2);
-      color: white;
-      border: none;
-      border-radius: 25px;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-      white-space: nowrap;
-      font-size: 0.9em;
-    }
-
-    .copy-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
-    }
-
-    .copy-btn:active {
-      transform: translateY(0);
-    }
-
-    /* Upload Section */
-    .upload-section {
-      text-align: center;
-      margin: 50px 0;
-    }
-
-    .upload-btn {
-      background: linear-gradient(45deg, #00d4aa, #00bfa5);
-      color: white;
-      padding: 15px 40px;
-      text-decoration: none;
-      border-radius: 30px;
-      font-size: 1.1em;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0, 212, 170, 0.3);
-      display: inline-block;
-    }
-
-    .upload-btn:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(0, 212, 170, 0.4);
-    }
-
-    /* Warning Button */
-    .warning-btn {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: #ff6b6b;
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 50px;
-      height: 50px;
-      cursor: pointer;
-      font-size: 1.2em;
-      z-index: 1000;
-      box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
-      transition: all 0.3s ease;
-    }
-
-    .warning-btn:hover {
-      transform: scale(1.1);
-      box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
-    }
-
-    /* Admin Panel (hidden) */
-    .admin-panel {
-      display: none;
-    }
-
-    /* Mobile Responsive */
-    @media (max-width: 768px) {
-      .header h1 {
-        font-size: 2em;
-      }
-
-      .payment-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-        padding: 20px 0;
-      }
-
-      .payment-card {
-        margin: 0 10px;
-      }
-
-      .qris-section {
-        margin: 20px 10px;
-        padding: 20px;
-      }
-
-      .instructions {
-        margin: 20px 10px;
-        padding: 20px;
-      }
-
-      .warning-btn {
-        top: 15px;
-        right: 15px;
-        width: 45px;
-        height: 45px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .container {
-        padding: 0 10px;
-      }
-
-      .header h1 {
-        font-size: 1.8em;
-      }
-
-      .payment-card {
-        padding: 20px;
-      }
-
-      .qris-code img {
-        max-width: 120px;
-      }
-
-      .qris-modal img {
-        max-width: 300px;
-      }
-
-      .contact-btn {
-        font-size: 14px;
-        padding: 12px;
-      }
-    }
-
-    /* Animasi Slide */
-    .slide-left {
-      transform: translateX(-100%);
-    }
-
-    .slide-right {
-      transform: translateX(0);
-    }
-
-    .warning-popup-inner {
-      transition: transform 0.5s ease;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rizka Arwani Payment</title>
+<!-- 1. Menambahkan Favicon -->
+<link rel="icon" href="https://i.imgur.com/78Xkxd6.png" type="image/png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syne:wght@700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/11.0.5/swiper-bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.all.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  :root {
+    --grad1: #1a0533;
+    --grad2: #0d1f3c;
+    --grad3: #0a3d3a;
+    --accent: #a78bfa;
+    --accent2: #34d399;
+    --accent3: #60a5fa;
+    --glass-bg: rgba(255,255,255,0.06);
+    --glass-border: rgba(255,255,255,0.12);
+    --glass-hover: rgba(255,255,255,0.1);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(135deg, var(--grad1) 0%, var(--grad2) 50%, var(--grad3) 100%);
+    min-height: 100vh;
+    color: #e2e8f0;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 20% 20%, rgba(167,139,250,0.15) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 80% 80%, rgba(52,211,153,0.12) 0%, transparent 60%),
+      radial-gradient(ellipse 50% 50% at 50% 50%, rgba(96,165,250,0.08) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+  }
+  .glass {
+    background: var(--glass-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid var(--glass-border);
+    border-radius: 20px;
+  }
+  .glass-card {
+    background: rgba(255,255,255,0.05);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    transition: all 0.3s ease;
+  }
+  .glass-card:hover {
+    background: rgba(255,255,255,0.09);
+    border-color: rgba(255,255,255,0.2);
+    transform: translateY(-2px);
+  }
+  .gradient-text {
+    background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    border: none;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #8b5cf6, #6366f1);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .btn-primary:hover::before { opacity: 1; }
+  .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(124,58,237,0.4); }
+  .btn-primary:active { transform: translateY(0); }
+  .btn-primary span { position: relative; z-index: 1; }
+  .btn-secondary {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #e2e8f0;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+  }
+  .btn-secondary:hover {
+    background: rgba(255,255,255,0.14);
+    border-color: rgba(255,255,255,0.25);
+    transform: translateY(-2px);
+  }
+  .btn-danger {
+    background: linear-gradient(135deg, #dc2626, #991b1b);
+    border: none;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+  }
+  .btn-success {
+    background: linear-gradient(135deg, #059669, #047857);
+    border: none;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+  }
+  .btn-success:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(5,150,105,0.4); }
+  .btn-wa {
+    background: linear-gradient(135deg, #16a34a, #15803d);
+    border: none;
+    color: white;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: center;
+  }
+  .btn-wa:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(22,163,74,0.4); }
+
+  input[type="number"], input[type="text"] {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    color: #e2e8f0;
+    padding: 14px 18px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    width: 100%;
+    outline: none;
+    transition: all 0.3s;
+  }
+  input[type="number"]:focus, input[type="text"]:focus {
+    border-color: rgba(167,139,250,0.5);
+    background: rgba(255,255,255,0.09);
+    box-shadow: 0 0 0 3px rgba(167,139,250,0.15);
+  }
+  input[type="number"]::placeholder { color: rgba(255,255,255,0.3); }
+
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    margin-bottom: 32px;
+  }
+  .step-dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 700;
+    transition: all 0.4s ease;
+    border: 2px solid rgba(255,255,255,0.2);
+    color: rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.06);
+    position: relative;
+    z-index: 1;
+  }
+  .step-dot.active {
+    background: linear-gradient(135deg, #7c3aed, #4f46e5);
+    border-color: #a78bfa;
+    color: white;
+    box-shadow: 0 0 20px rgba(124,58,237,0.5);
+  }
+  .step-dot.done {
+    background: linear-gradient(135deg, #059669, #047857);
+    border-color: #34d399;
+    color: white;
+  }
+  .step-line {
+    width: 40px;
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    transition: all 0.4s ease;
+  }
+  .step-line.done { background: linear-gradient(90deg, #059669, #047857); }
+
+  .qris-option {
+    border: 2px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(255,255,255,0.04);
+  }
+  .qris-option:hover {
+    border-color: rgba(167,139,250,0.4);
+    background: rgba(167,139,250,0.08);
+  }
+  .qris-option.selected {
+    border-color: #a78bfa;
+    background: rgba(167,139,250,0.12);
+    box-shadow: 0 0 20px rgba(167,139,250,0.2);
+  }
+
+  .bank-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+  .bank-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(167,139,250,0.1), transparent);
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .bank-card:hover { border-color: rgba(167,139,250,0.3); transform: translateY(-3px); }
+  .bank-card:hover::before { opacity: 1; }
+  .bank-card:active { transform: scale(0.97); }
+
+  .page { display: none; }
+  .page.active { display: block; }
+
+  .swiper { border-radius: 16px; overflow: hidden; }
+  .swiper-slide img { width: 100%; height: 100%; object-fit: cover; }
+  .swiper-pagination-bullet { background: rgba(255,255,255,0.5) !important; }
+  .swiper-pagination-bullet-active { background: #a78bfa !important; }
+  .swiper-button-next, .swiper-button-prev { color: white !important; }
+
+  .fee-breakdown {
+    background: rgba(167,139,250,0.08);
+    border: 1px solid rgba(167,139,250,0.2);
+    border-radius: 12px;
+    padding: 16px;
+    margin-top: 12px;
+  }
+
+  .qr-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+  .qr-frame {
+    background: white;
+    border-radius: 20px;
+    padding: 16px;
+    position: relative;
+    box-shadow: 0 0 40px rgba(167,139,250,0.3), 0 20px 60px rgba(0,0,0,0.4);
+  }
+  .qr-frame::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #a78bfa, #34d399, #60a5fa);
+    z-index: -1;
+  }
+
+  #toast-container {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .toast {
+    background: rgba(15,25,40,0.9);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(52,211,153,0.3);
+    border-radius: 14px;
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 260px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    animation: slideInRight 0.4s cubic-bezier(0.34,1.56,0.64,1) forwards;
+  }
+  .toast.hide { animation: slideOutRight 0.3s ease forwards; }
+  @keyframes slideInRight {
+    from { transform: translateX(120%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+  }
+  @keyframes slideOutRight {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(120%); opacity: 0; }
+  }
+
+  .header-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 28px;
+    letter-spacing: -0.5px;
+  }
+
+  .floating-orb {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    pointer-events: none;
+    z-index: 0;
+    animation: floatOrb 8s ease-in-out infinite;
+  }
+  @keyframes floatOrb {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -20px) scale(1.05); }
+    66% { transform: translate(-20px, 15px) scale(0.95); }
+  }
+
+  .main-choice-btn {
+    border-radius: 20px;
+    padding: 36px 28px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.34,1.56,0.64,1);
+    text-align: center;
+    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(255,255,255,0.04);
+    position: relative;
+    overflow: hidden;
+  }
+  .main-choice-btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(167,139,250,0.15), rgba(96,165,250,0.1));
+    opacity: 0;
+    transition: opacity 0.3s;
+    border-radius: 20px;
+  }
+  .main-choice-btn:hover::after { opacity: 1; }
+  .main-choice-btn:hover { transform: translateY(-6px) scale(1.01); border-color: rgba(167,139,250,0.4); box-shadow: 0 20px 60px rgba(0,0,0,0.3); }
+  .main-choice-btn .icon-wrap {
+    width: 72px;
+    height: 72px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin: 0 auto 16px;
+  }
+
+  .swal-custom {
+    font-family: 'Plus Jakarta Sans', sans-serif !important;
+  }
+
+  label { display: block; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.6); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  @media (max-width: 640px) {
+    .main-choice-btn { padding: 24px 20px; }
+    .header-logo { font-size: 22px; }
+  }
+
+  .pulse-ring {
+    position: absolute;
+    inset: -8px;
+    border-radius: 50%;
+    border: 2px solid rgba(167,139,250,0.4);
+    animation: pulseRing 2s ease infinite;
+  }
+  @keyframes pulseRing {
+    0% { transform: scale(1); opacity: 0.8; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+
+  .loading-spinner {
+    width: 40px; height: 40px;
+    border: 3px solid rgba(255,255,255,0.1);
+    border-top-color: #a78bfa;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin: 20px auto;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+</style>
 </head>
 <body>
-  <!-- Notification -->
-  <div id="notif"></div>
 
-  <!-- Warning Button -->
-  <button class="warning-btn" onclick="showWarning()" title="Informasi Maintenance">⚠️</button>
+<div class="floating-orb" style="width:400px;height:400px;background:rgba(124,58,237,0.12);top:-100px;left:-100px;animation-delay:0s;"></div>
+<div class="floating-orb" style="width:350px;height:350px;background:rgba(52,211,153,0.08);bottom:-80px;right:-80px;animation-delay:3s;"></div>
+<div class="floating-orb" style="width:300px;height:300px;background:rgba(96,165,250,0.07);top:50%;left:60%;animation-delay:6s;"></div>
 
-  <!-- QRIS Modal -->
-  <div class="qris-modal" id="qrisModal">
-    <div class="qris-modal-content">
-      <button class="close-qris" onclick="closeQris()">×</button>
-      <h2 style="color: #00d4aa; margin-bottom: 20px;">🔥 Scan QRIS Code</h2>
-      <img src="https://i.imgur.com/ZQQnBGh.png" alt="QRIS Code Large">
-      <p style="margin: 20px 0; color: #666; font-size: 1.1em;">
-        <strong>Semua Bank & E-Wallet Supported!</strong><br>
-      </p>
-      <div style="background: linear-gradient(45deg, #00d4aa, #00bfa5); color: white; padding: 15px; border-radius: 10px; margin-top: 20px;">
-        💡 <strong>Tips:</strong> Pastikan QR code terlihat jelas di layar
+<div id="toast-container"></div>
+
+<div style="position:relative;z-index:1;min-height:100vh;padding:20px;">
+
+  <!-- HEADER -->
+  <header style="max-width:800px;margin:0 auto 32px;display:flex;align-items:center;justify-content:space-between;">
+    <div>
+      <div class="header-logo gradient-text">RIZKA<span style="color:#e2e8f0;-webkit-text-fill-color:#e2e8f0;"> ARWANI</span></div>
+      <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px;">Personal Payment Gateway</div>
+    </div>
+    <div class="glass" style="padding:10px 16px;font-size:13px;color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:8px;">
+      <span style="width:8px;height:8px;background:#34d399;border-radius:50%;display:inline-block;box-shadow:0 0 8px #34d399;"></span>
+      Secure & Online
+    </div>
+  </header>
+
+  <!-- PAGE: MAIN -->
+  <div id="page-main" class="page active" style="max-width:800px;margin:0 auto;">
+    <div style="text-align:center;margin-bottom:40px;" class="animate__animated animate__fadeInDown">
+      <h1 style="font-family:'Syne',sans-serif;font-size:clamp(28px,5vw,48px);font-weight:800;line-height:1.1;margin-bottom:12px;">
+        Pilih Metode<br><span class="gradient-text">Pembayaran</span>
+      </h1>
+      <p style="color:rgba(255,255,255,0.5);font-size:15px;">Aman, cepat, dan mudah. Pilih cara bayar yang kamu inginkan.</p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;" class="animate__animated animate__fadeInUp animate__delay-1s">
+      <!-- QRIS -->
+      <div class="main-choice-btn" onclick="goToQris()">
+        <div style="position:relative;z-index:1;">
+          <div class="icon-wrap" style="background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(79,70,229,0.3));">
+            <i class="fa-solid fa-qrcode" style="color:#a78bfa;"></i>
+          </div>
+          <h2 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px;">Bayar via QRIS</h2>
+          <p style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5;">Scan QR code dengan aplikasi bank atau dompet digital apapun</p>
+          <div style="margin-top:16px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+            <span style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.3);padding:4px 10px;border-radius:20px;font-size:11px;color:#c4b5fd;">Otomatis</span>
+            <span style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);padding:4px 10px;border-radius:20px;font-size:11px;color:#6ee7b7;">Real-time QR</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transfer Bank -->
+      <div class="main-choice-btn" onclick="goToBank()">
+        <div style="position:relative;z-index:1;">
+          <div class="icon-wrap" style="background:linear-gradient(135deg,rgba(5,150,105,0.3),rgba(4,120,87,0.3));">
+            <i class="fa-solid fa-building-columns" style="color:#34d399;"></i>
+          </div>
+          <h2 style="font-family:'Syne',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px;">Transfer Bank</h2>
+          <p style="font-size:13px;color:rgba(255,255,255,0.5);line-height:1.5;">Transfer manual ke rekening bank atau dompet digital pilihan</p>
+          <div style="margin-top:16px;display:flex;gap:6px;justify-content:center;flex-wrap:wrap;">
+            <span style="background:rgba(52,211,153,0.12);border:1px solid rgba(52,211,153,0.25);padding:4px 10px;border-radius:20px;font-size:11px;color:#6ee7b7;">Manual</span>
+            <span style="background:rgba(96,165,250,0.12);border:1px solid rgba(96,165,250,0.25);padding:4px 10px;border-radius:20px;font-size:11px;color:#93c5fd;">9 Bank/E-Wallet</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Tombol Kontak Admin di Halaman Awal -->
+    <div class="animate__animated animate__fadeInUp animate__delay-1s" style="margin-top:20px;">
+       <div class="main-choice-btn" onclick="goToContact()" style="padding:24px;">
+         <div style="display:flex; align-items:center; gap:16px; justify-content:center;">
+            <div class="icon-wrap" style="width:56px;height:56px;margin:0;background:linear-gradient(135deg,rgba(245,158,11,0.3),rgba(217,119,6,0.3));">
+               <i class="fa-solid fa-headset" style="color:#fbbf24;font-size:24px;"></i>
+            </div>
+            <div style="text-align:left;">
+               <h2 style="font-family:'Syne',sans-serif;font-size:18px;font-weight:700;">Kontak Admin</h2>
+               <p style="font-size:12px;color:rgba(255,255,255,0.5);">Bantuan, kendala & pertanyaan</p>
+            </div>
+         </div>
+       </div>
+    </div>
+
+    <!-- Info card -->
+    <div class="glass-card" style="margin-top:24px;padding:20px;display:flex;align-items:center;gap:16px;" class="animate__animated animate__fadeIn">
+      <div style="width:44px;height:44px;background:rgba(167,139,250,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+        <i class="fa-solid fa-shield-halved" style="color:#a78bfa;font-size:18px;"></i>
+      </div>
+      <div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:3px;">Semua rekening atas nama <span style="color:#a78bfa;">Rizka Arwani</span></div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);">Pastikan nama penerima sesuai sebelum melakukan transfer.</div>
       </div>
     </div>
   </div>
 
-  <!-- Warning Popup dengan 2 halaman -->
-  <div class="warning-popup" id="warningPopup">
-    <div class="warning-popup-inner" id="warningPopupInner">
-      <!-- Halaman 1: Warning -->
-      <div class="warning-page">
-        <div class="warning-content">
-          <img src="https://cdn-icons-png.flaticon.com/512/595/595067.png" alt="Warning">
-          <h3>⚠️ Informasi Maintenance</h3>
-          <p>Saat ini semua layanan perbankan aman terkendali. Tapi kalau proses transfernya tiba tiba baper, jangan disimpan sendiri... curhat aja ke admin yaaaa.... <br>
-          🥰🥰🥰</p>
-          <p><strong>Terima Kasih</strong> 😊</p>
-          <button class="close-warning" onclick="closeWarning()">Tutup</button>
-          <button class="contact-admin-btn" onclick="showAdminContact()" style="margin-top: 15px; background: #667eea; color: white; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold;">
-            <i class="fas fa-headset"></i> Hubungi Admin
-          </button>
+  <!-- PAGE: KONTAK ADMIN (Sesuai instruksi #5) -->
+  <div id="page-contact" class="page" style="max-width:600px;margin:0 auto;">
+      <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;" class="animate__animated animate__fadeInDown">
+        <button class="btn-secondary" onclick="goToMain()" style="padding:12px 16px;">
+          <i class="fa-solid fa-arrow-left"></i>
+        </button>
+        <div>
+          <h2 style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;">Kontak Admin</h2>
+          <p style="color:rgba(255,255,255,0.5);font-size:13px;">Pilih jalur komunikasi di bawah ini</p>
         </div>
       </div>
-      
-      <!-- Halaman 2: Kontak Admin -->
-      <div class="warning-page">
-        <div class="warning-content">
-          <div class="admin-header">
-            <h3>📞 Kontak Admin</h3>
-            <button class="close-admin" onclick="backToWarning()">← Kembali</button>
+
+      <div class="glass animate__animated animate__fadeInUp" style="padding:28px; text-align:center;">
+          <div style="width:80px;height:80px;background:linear-gradient(135deg,rgba(245,158,11,0.2),rgba(217,119,6,0.1));border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;border:1px solid rgba(245,158,11,0.3);">
+              <i class="fa-solid fa-headset" style="font-size:36px;color:#fbbf24;"></i>
           </div>
-          
-          <div class="contact-methods">
-            <a href="https://wa.me/6282326525782" class="contact-btn whatsapp" target="_blank">
-              <i class="fab fa-whatsapp"></i> WhatsApp: 0823-2652-5782
-            </a>
-            <a href="https://instagram.com/rizka_arwani" class="contact-btn instagram" target="_blank">
-              <i class="fab fa-instagram"></i> Instagram: @rizka_arwani
-            </a>
-            <a href="https://facebook.com/rizka.arwani" class="contact-btn facebook" target="_blank">
-              <i class="fab fa-facebook"></i> Facebook: Rizka Arwani
-            </a>
-            <a href="mailto:rizkaarwani77@gmail.com" class="contact-btn email" target="_blank">
-              <i class="fas fa-envelope"></i> Email: rizkaarwani77@gmail.com
-            </a>
-          </div>
-          
-          <p style="margin-top: 20px; color: #666; text-align: center;">
-            Hubungi admin jika ada pertanyaan atau kendala dalam pembayaran
+          <p style="color:rgba(255,255,255,0.6);font-size:14px;margin-bottom:24px;line-height:1.6;">
+              Hubungi admin jika ada pertanyaan atau kendala dalam pembayaran. Kami siap membantu!
           </p>
+
+          <div style="display:grid;gap:14px;">
+              <button class="btn-secondary" onclick="window.open('https://wa.me/6282326525782','_blank')" style="padding:16px; display:flex; align-items:center; gap:8px; justify-content:flex-start; font-size:15px; color:#34d399;">
+                <i class="fa-brands fa-whatsapp" style="font-size:20px; width:28px; text-align:center;"></i>
+                WhatsApp: 0823-2652-5782
+              </button>
+              <button class="btn-secondary" onclick="window.open('https://instagram.com/rizka_arwani','_blank')" style="padding:16px; display:flex; align-items:center; gap:8px; justify-content:flex-start; font-size:15px; color:#f472b6;">
+                <i class="fa-brands fa-instagram" style="font-size:20px; width:28px; text-align:center;"></i>
+                Instagram: @rizka_arwani
+              </button>
+              <button class="btn-secondary" onclick="window.open('https://facebook.com/rizka.arwani','_blank')" style="padding:16px; display:flex; align-items:center; gap:8px; justify-content:flex-start; font-size:15px; color:#60a5fa;">
+                <i class="fa-brands fa-facebook" style="font-size:20px; width:28px; text-align:center;"></i>
+                Facebook: Rizka Arwani
+              </button>
+              <button class="btn-secondary" onclick="window.open('mailto:rizkaarwani77@gmail.com','_blank')" style="padding:16px; display:flex; align-items:center; gap:8px; justify-content:flex-start; font-size:15px; color:#a78bfa;">
+                <i class="fa-solid fa-envelope" style="font-size:20px; width:28px; text-align:center;"></i>
+                Email: rizkaarwani77@gmail.com
+              </button>
+          </div>
+      </div>
+  </div>
+
+  <!-- PAGE: QRIS STEPPER -->
+  <div id="page-qris" class="page" style="max-width:640px;margin:0 auto;">
+    <!-- Step Indicator -->
+    <div class="step-indicator" id="step-indicator">
+      <div class="step-dot active" id="dot-1">1</div>
+      <div class="step-line" id="line-1"></div>
+      <div class="step-dot" id="dot-2">2</div>
+      <div class="step-line" id="line-2"></div>
+      <div class="step-dot" id="dot-3">3</div>
+      <div class="step-line" id="line-3"></div>
+      <div class="step-dot" id="dot-4">4</div>
+    </div>
+
+    <!-- STEP 1: Edukasi -->
+    <div id="qris-step-1" class="glass animate__animated animate__fadeIn" style="padding:28px;">
+      <div style="text-align:center;margin-bottom:20px;">
+        <span style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#c4b5fd;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 1 of 4</span>
+        <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-top:12px;">Cara Bayar via QRIS</h2>
+        <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:4px;">Ikuti panduan berikut untuk pembayaran sukses</p>
+      </div>
+
+      <div class="swiper" id="edu-swiper" style="height:260px;margin-bottom:20px;">
+        <div class="swiper-wrapper">
+          <div class="swiper-slide">
+            <div style="height:100%;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(79,70,229,0.2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+              <div style="width:64px;height:64px;background:rgba(167,139,250,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                <i class="fa-solid fa-mobile-screen-button" style="font-size:28px;color:#a78bfa;"></i>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-weight:700;font-size:16px;margin-bottom:6px;">1. Buka Aplikasi Bank</div>
+                <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Buka aplikasi bank atau e-wallet kamu (GoPay, OVO, Dana, BCA, dll)</div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div style="height:100%;background:linear-gradient(135deg,rgba(5,150,105,0.25),rgba(4,120,87,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+              <div style="width:64px;height:64px;background:rgba(52,211,153,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                <i class="fa-solid fa-qrcode" style="font-size:28px;color:#34d399;"></i>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-weight:700;font-size:16px;margin-bottom:6px;">2. Pilih Scan QR / QRIS</div>
+                <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Cari menu "Bayar", "Scan QR", atau "QRIS" pada halaman utama aplikasi</div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div style="height:100%;background:linear-gradient(135deg,rgba(96,165,250,0.25),rgba(59,130,246,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+              <div style="width:64px;height:64px;background:rgba(96,165,250,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                <i class="fa-solid fa-camera" style="font-size:28px;color:#60a5fa;"></i>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-weight:700;font-size:16px;margin-bottom:6px;">3. Arahkan ke QR Code</div>
+                <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Scan QR Code yang tampil di layar ini. Nominal akan terisi otomatis</div>
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div style="height:100%;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+              <div style="width:64px;height:64px;background:rgba(245,158,11,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                <i class="fa-solid fa-check-circle" style="font-size:28px;color:#fbbf24;"></i>
+              </div>
+              <div style="text-align:center;">
+                <div style="font-weight:700;font-size:16px;margin-bottom:6px;">4. Konfirmasi & Bayar</div>
+                <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Periksa detail, masukkan PIN, dan tunggu konfirmasi pembayaran berhasil</div>
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next" style="color:white;transform:scale(0.7);"></div>
+        <div class="swiper-button-prev" style="color:white;transform:scale(0.7);"></div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:8px;">
+        <button class="btn-secondary" style="flex:1;" onclick="goToMain()"><i class="fa-solid fa-arrow-left" style="margin-right:8px;"></i>Kembali</button>
+        <button class="btn-primary" style="flex:2;" onclick="goStep(2)"><span>Lanjut <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i></span></button>
+      </div>
+    </div>
+
+    <!-- STEP 2: Input -->
+    <div id="qris-step-2" class="glass animate__animated" style="padding:28px;display:none;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <span style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#c4b5fd;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 2 of 4</span>
+        <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-top:12px;">Detail Pembayaran</h2>
+        <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:4px;">Pilih QRIS dan masukkan nominal yang ingin dibayar</p>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label>Pilih QRIS</label>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+          <div class="qris-option" id="opt-qris1" onclick="selectQris('mandiri')">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;background:linear-gradient(135deg,#003087,#0050a0);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:white;flex-shrink:0;">M</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;">QRIS 1</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.5);">Mandiri</div>
+              </div>
+            </div>
+          </div>
+          <div class="qris-option" id="opt-qris2" onclick="selectQris('grab')">
+            <div style="display:flex;align-items:center;gap:10px;">
+              <div style="width:36px;height:36px;background:linear-gradient(135deg,#00b14f,#009c3d);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:white;flex-shrink:0;">G</div>
+              <div>
+                <div style="font-weight:700;font-size:14px;">QRIS 2</div>
+                <div style="font-size:11px;color:rgba(255,255,255,0.5);">Grab/OVO</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-bottom:20px;">
+        <label>Nominal Pembayaran (Rp)</label>
+        <input type="number" id="nominal-input" placeholder="Contoh: 50000" min="10000" oninput="updateNominal()" style="font-size:18px;font-weight:700;">
+        <div id="nominal-warning" style="display:none;margin-top:10px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 14px;font-size:13px;color:#fca5a5;display:flex;align-items:center;gap:8px;">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>Pembayaran kurang dari Rp 10.000, harap hubungi admin.</span>
+        </div>
+      </div>
+
+      <div id="fee-section" style="display:none;">
+        <div class="fee-breakdown">
+          <div style="font-size:12px;font-weight:700;color:#c4b5fd;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Rincian Biaya</div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.6);">Nominal</span>
+            <span id="fee-nominal" style="font-weight:600;">Rp 0</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.6);">MDR 0.3%</span>
+            <span id="fee-mdr" style="font-weight:600;color:#fbbf24;">+ Rp 0</span>
+          </div>
+          <div style="border-top:1px solid rgba(167,139,250,0.2);padding-top:8px;display:flex;justify-content:space-between;font-size:15px;">
+            <span style="font-weight:700;">Total Bayar</span>
+            <span id="fee-total" style="font-weight:800;color:#a78bfa;">Rp 0</span>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:24px;">
+        <button class="btn-secondary" style="flex:1;" onclick="goStep(1)"><i class="fa-solid fa-arrow-left" style="margin-right:8px;"></i>Kembali</button>
+        <button class="btn-primary" id="btn-generate" style="flex:2;opacity:0.4;cursor:not-allowed;" onclick="generateQR()" disabled>
+          <span><i class="fa-solid fa-qrcode" style="margin-right:8px;"></i>Generate QR</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 3: QR Code -->
+    <div id="qris-step-3" class="glass animate__animated" style="padding:28px;display:none;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <span style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#6ee7b7;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 3 of 4</span>
+        <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-top:12px;">Scan QR Code</h2>
+        <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:4px;">Scan QR ini dengan aplikasi bank atau e-wallet kamu</p>
+      </div>
+
+      <div class="qr-container" id="qr-container">
+        <div class="loading-spinner"></div>
+        <p style="color:rgba(255,255,255,0.4);font-size:14px;">Generating QR Code...</p>
+      </div>
+
+      <div id="qr-detail" style="display:none;margin-top:20px;">
+        <div class="fee-breakdown" style="background:rgba(52,211,153,0.06);border-color:rgba(52,211,153,0.2);">
+          <div style="font-size:12px;font-weight:700;color:#6ee7b7;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Detail Transaksi</div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.6);">Metode</span>
+            <span id="qr-method" style="font-weight:600;"></span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:14px;">
+            <span style="color:rgba(255,255,255,0.6);">Total Bayar</span>
+            <span id="qr-amount-display" style="font-weight:800;color:#34d399;font-size:16px;"></span>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:12px;padding:12px 14px;display:flex;align-items:flex-start;gap:8px;">
+          <i class="fa-solid fa-circle-info" style="color:#fbbf24;margin-top:1px;flex-shrink:0;"></i>
+          <p style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;">QR Code berlaku untuk sekali pembayaran. Setelah scan, segera selesaikan transaksi. Jangan tutup halaman ini.</p>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;margin-top:24px;">
+        <button class="btn-secondary" style="flex:1;" onclick="goStep(2)"><i class="fa-solid fa-arrow-left" style="margin-right:8px;"></i>Kembali</button>
+        <button class="btn-success" style="flex:2;" onclick="goStep(4)">
+          <i class="fa-solid fa-check" style="margin-right:8px;"></i>Sudah Bayar
+        </button>
+      </div>
+    </div>
+
+    <!-- STEP 4: Konfirmasi -->
+    <div id="qris-step-4" class="glass animate__animated" style="padding:28px;display:none;">
+      <div style="text-align:center;margin-bottom:24px;">
+        <div style="width:72px;height:72px;background:linear-gradient(135deg,rgba(52,211,153,0.3),rgba(5,150,105,0.2));border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;">
+          <i class="fa-solid fa-paper-plane" style="font-size:28px;color:#34d399;"></i>
+          <div class="pulse-ring"></div>
+        </div>
+        <span style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#6ee7b7;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 4 of 4</span>
+        <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-top:12px;">Konfirmasi Pembayaran</h2>
+        <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:4px;line-height:1.6;">Hubungi kami via WhatsApp atau isi form konfirmasi untuk verifikasi pembayaran</p>
+      </div>
+
+      <div style="display:grid;gap:14px;">
+        <button class="btn-wa" onclick="confirmWA()" style="padding:18px;font-size:15px;">
+          <i class="fa-brands fa-whatsapp" style="font-size:20px;"></i>
+          Konfirmasi via WhatsApp
+        </button>
+        <button class="btn-primary" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScBi9UXKD_XH_A1xyabWbwm6y1xBe386vQ0pcc2u_L6eIupiA/viewform','_blank')" style="padding:18px;font-size:15px;">
+          <span><i class="fa-brands fa-google" style="margin-right:8px;"></i>Isi Form Konfirmasi</span>
+        </button>
+      </div>
+
+      <div style="margin-top:20px;background:rgba(255,255,255,0.04);border-radius:14px;padding:16px;text-align:center;">
+        <p style="font-size:12px;color:rgba(255,255,255,0.4);line-height:1.7;">
+          <i class="fa-solid fa-clock" style="margin-right:6px;color:#fbbf24;"></i>
+          Konfirmasi biasanya diproses dalam <strong style="color:rgba(255,255,255,0.7);">1×24 jam</strong>. Simpan bukti pembayaran kamu.
+        </p>
+      </div>
+
+      <button class="btn-secondary" style="width:100%;margin-top:14px;" onclick="goToMain()">
+        <i class="fa-solid fa-house" style="margin-right:8px;"></i>Kembali ke Beranda
+      </button>
+    </div>
+  </div>
+
+  <!-- PAGE: BANK TRANSFER -->
+  <div id="page-bank" class="page" style="max-width:800px;margin:0 auto;">
+    <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;" class="animate__animated animate__fadeInDown">
+      <button class="btn-secondary" onclick="goToMain()" style="padding:12px 16px;">
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+      <div>
+        <h2 style="font-family:'Syne',sans-serif;font-size:24px;font-weight:800;">Transfer Bank</h2>
+        <p style="color:rgba(255,255,255,0.5);font-size:13px;">Klik nomor rekening untuk menyalin</p>
+      </div>
+    </div>
+
+    <!-- 3. Tombol Cara Pembayaran Manual Transfer -->
+    <button class="btn-secondary animate__animated animate__fadeInDown" onclick="openBankEduModal()" style="width:100%; margin-bottom:20px; display:flex; justify-content:center; align-items:center; gap:8px;">
+        <i class="fa-solid fa-circle-play" style="color:#a78bfa; font-size:18px;"></i> Cara Pembayaran Manual Transfer
+    </button>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;" class="animate__animated animate__fadeInUp">
+      
+      <!-- 4. Mengganti semua ikon bank dengan gambar asli -->
+      <!-- BCA -->
+      <div class="bank-card" onclick="copyRek('8365478640','BCA')">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="BCA" style="width:42px;height:42px;object-fit:contain;background:white;padding:6px;border-radius:10px;flex-shrink:0;">
+          <div>
+            <div style="font-weight:700;font-size:14px;">Bank Central Asia</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">BCA</div>
+          </div>
+        </div>
+        <div style="font-family:monospace;font-size:17px;font-weight:700;letter-spacing:2px;color:#a78bfa;margin-bottom:6px;">8365478640</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
+        <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
+      </div>
+
+      <!-- BNI -->
+      <div class="bank-card" onclick="copyRek('0837947494','BNI')">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Bank_Negara_Indonesia_logo_%282004%29.svg" alt="BNI" style="width:42px;height:42px;object-fit:contain;background:white;padding:6px;border-radius:10px;flex-shrink:0;">
+          <div>
+            <div style="font-weight:700;font-size:14px;">Bank Negara Indonesia</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">BNI</div>
+          </div>
+        </div>
+        <div style="font-family:monospace;font-size:17px;font-weight:700;letter-spacing:2px;color:#a78bfa;margin-bottom:6px;">0837947494</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
+        <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
+      </div>
+
+      <!-- BRI -->
+      <div class="bank-card" onclick="copyRek('592801047177534','BRI')">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/BRI_2025.png" alt="BRI" style="width:42px;height:42px;object-fit:contain;background:white;padding:6px;border-radius:10px;flex-shrink:0;">
+          <div>
+            <div style="font-weight:700;font-size:14px;">Bank Rakyat Indonesia</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">BRI</div>
+          </div>
+        </div>
+        <div style="font-family:monospace;font-size:14px;font-weight:700;letter-spacing:1.5px;color:#a78bfa;margin-bottom:6px;">592801047177534</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
+        <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
+      </div>
+
+      <!-- Mandiri -->
+      <div class="bank-card" onclick="copyRek('1840003632856','Mandiri')">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg" alt="Mandiri" style="width:42px;height:42px;object-fit:contain;background:white;padding:6px;border-radius:10px;flex-shrink:0;">
+          <div>
+            <div style="font-weight:700;font-size:14px;">Bank Mandiri</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">Mandiri</div>
+          </div>
+        </div>
+        <div style="font-family:monospace;font-size:14px;font-weight:700;letter-spacing:1.5px;color:#a78bfa;margin-bottom:6px;">1840003632856</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
+        <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
+      </div>
+
+      <!-- Seabank -->
+      <div class="bank-card" onclick="copyRek('901010934880','SeaBank')">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/SeaBank.svg" alt="SeaBank" style="width:42px;height:42px;object-fit:contain;background:white;padding:6px;border-radius:10px;flex-shrink:0;">
+          <div>
+            <div style="font-weight:700;font-size:14px;">SeaBank</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">Sea Bank Indonesia</div>
+          </div>
+        </div>
+        <div style="font-family:monospace;font-size:16px;font-weight:700;letter-spacing:2px;color:#a78bfa;margin-bottom:6px;">901010934880</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
+        <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
+      </div>
+
+      <!-- Danamon -->
+      <div class="bank-card" onclick="copyRek('003607068578','Danamon')">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <img src="https://i.imgur.com/j4R3BLB.png" alt="Danamon" style="width:42px;height:42px;object-fit:contain;background:white;padding:6px;border-radius:10px;flex-shrink:0;">
+          <div>
+            <div style="font-weight:700;font-size:14px;">Bank Danamon</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">Danamon</div>
+          </div>
+        </div>
+        <div style="font-family:monospace;font-size:16px;font-weight:700;letter-spacing:2px;color:#a78bfa;margin-bottom:6px;">003607068578</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
+        <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
+      </div>
+
+      <!-- CIMB -->
+      <div class="bank-card" onclick="copyRek('707538102300','CIMB Niaga')">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <img src="https://i.imgur.com/8qIJs4A.png" alt="CIMB" style="width:42px;height:42px;object-fit:contain;background:white;padding:6px;border-radius:10px;flex-shrink:0;">
+          <div>
+            <div style="font-weight:700;font-size:14px;">CIMB Niaga</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">CIMB</div>
+          </div>
+        </div>
+        <div style="font-family:monospace;font-size:16px;font-weight:700;letter-spacing:2px;color:#a78bfa;margin-bottom:6px;">707538102300</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
+        <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
+      </div>
+
+      <!-- BTN -->
+      <div class="bank-card" onclick="copyRek('18201700001239','BTN')">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/BTN_2024.svg/1920px-BTN_2024.svg.png?20240303202616" alt="BTN" style="width:42px;height:42px;object-fit:contain;background:white;padding:6px;border-radius:10px;flex-shrink:0;">
+          <div>
+            <div style="font-weight:700;font-size:14px;">Bank Tabungan Negara</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">BTN</div>
+          </div>
+        </div>
+        <div style="font-family:monospace;font-size:14px;font-weight:700;letter-spacing:1.5px;color:#a78bfa;margin-bottom:6px;">18201700001239</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
+        <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
+      </div>
+
+      <!-- E-Wallet -->
+      <div class="bank-card" onclick="copyRek('082326525782','E-Wallet')">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
+          <div style="width:42px;height:42px;background:linear-gradient(135deg,#7c3aed,#4f46e5);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fa-solid fa-wallet" style="color:white;font-size:16px;"></i>
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:14px;">E-Wallet</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">Shopeepay / GoPay / DANA / OVO</div>
+          </div>
+        </div>
+        <div style="font-family:monospace;font-size:16px;font-weight:700;letter-spacing:2px;color:#a78bfa;margin-bottom:6px;">082326525782</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
+        <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
+      </div>
+    </div>
+
+    <!-- Konfirmasi Transfer -->
+    <div class="glass-card" style="margin-top:24px;padding:20px;" class="animate__animated animate__fadeIn">
+      <div style="font-weight:700;font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
+        <i class="fa-solid fa-circle-check" style="color:#34d399;"></i>
+        Setelah Transfer
+      </div>
+      <p style="font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:14px;line-height:1.6;">Lakukan konfirmasi pembayaran agar pesananmu segera diproses.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+        <button class="btn-wa" style="flex:1;min-width:160px;padding:12px;" onclick="confirmWA()">
+          <i class="fa-brands fa-whatsapp"></i> Konfirmasi WA
+        </button>
+        <button class="btn-primary" style="flex:1;min-width:160px;padding:12px;" onclick="window.open('https://docs.google.com/forms/d/e/1FAIpQLScBi9UXKD_XH_A1xyabWbwm6y1xBe386vQ0pcc2u_L6eIupiA/viewform','_blank')">
+          <span><i class="fa-brands fa-google" style="margin-right:6px;"></i>Isi Form</span>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- Header -->
-  <div class="header">
-    <h1>💳 Informasi Pembayaran</h1>
-    <p>Pilih metode pembayaran yang tersedia di bawah ini</p>
-  </div>
+</div>
 
-  <div class="container">
-    <!-- Instructions -->
-    <div class="instructions">
-      <h2>📋 Petunjuk Pembayaran</h2>
-      <ol>
-        <li><strong>Pilih metode pembayaran</strong> yang Anda miliki dari daftar di bawah</li>
-        <li><strong>Klik tombol "Salin"</strong> untuk menyalin nomor rekening/akun</li>
-        <li><strong>Buka aplikasi mobile banking/e-wallet/datang ke ATM</strong> terdekat sekitar anda</li>
-        <li><strong>Lakukan transfer</strong> sesuai nominal yang diminta</li>
-        <li><strong>Simpan bukti transfer</strong> (screenshot/foto)</li>
-        <li><strong>Klik "Lanjut ke Upload Bukti" atau konfirmasi ke admin</strong> untuk mengunggah bukti pembayaran</li>
-        <li><strong>Tunggu konfirmasi</strong> dari admin (max 24 jam)</li>
-      </ol>
-    </div>
-
-    <!-- QRIS Section -->
-    <div class="qris-section">
-      <h2>🔥 QRIS - ALL PAYMENT</h2>
-      <p>Scan QRIS ini dengan e-wallet/mobile banking Anda</p>
-      <div class="qris-code" onclick="openQris()">
-        <img src="https://i.imgur.com/ZQQnBGh.png" alt="QRIS Code">
-        <p><strong>Klik untuk memperbesar</strong></p>
-        <p style="font-size: 0.9em; color: #666;">Semua E-Wallet & Mobile Banking</p>
-      </div>
-      <div class="qris-note">
-        💡 QRIS support semua bank dan e-wallet!
-      </div>
-    </div>
-
-    <!-- Payment Grid -->
-    <div class="payment-grid">
-      <!-- Bank Cards -->
-      <div class="payment-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_Central_Asia.svg" alt="BCA">
-        <h3>BCA</h3>
-        <div class="account-info">
-          <div class="account-details">
-            <div class="account-number" id="bca">8365478640</div>
-            <div class="account-name">a.n. Rizka Arwani</div>
-          </div>
-          <button class="copy-btn" onclick="copyText('bca')">📋 Salin</button>
-        </div>
-      </div>
-
-      <div class="payment-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/f/f0/Bank_Negara_Indonesia_logo_%282004%29.svg" alt="BNI">
-        <h3>BNI</h3>
-        <div class="account-info">
-          <div class="account-details">
-            <div class="account-number" id="bni">0837947494</div>
-            <div class="account-name">a.n. Rizka Arwani</div>
-          </div>
-          <button class="copy-btn" onclick="copyText('bni')">📋 Salin</button>
-        </div>
-      </div>
-
-      <div class="payment-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/6d/BRI_2025.png" alt="BRI">
-        <h3>BRI</h3>
-        <div class="account-info">
-          <div class="account-details">
-            <div class="account-number" id="bri">592801047177534</div>
-            <div class="account-name">a.n. Rizka Arwani</div>
-          </div>
-          <button class="copy-btn" onclick="copyText('bri')">📋 Salin</button>
-        </div>
-      </div>
-
-      <div class="payment-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg" alt="Mandiri">
-        <h3>Mandiri</h3>
-        <div class="account-info">
-          <div class="account-details">
-            <div class="account-number" id="mandiri">1840003632856</div>
-            <div class="account-name">a.n. Rizka Arwani</div>
-          </div>
-          <button class="copy-btn" onclick="copyText('mandiri')">📋 Salin</button>
-        </div>
-      </div>
-
-      <div class="payment-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/a/ac/SeaBank.svg" alt="SeaBank">
-        <h3>SeaBank</h3>
-        <div class="account-info">
-          <div class="account-details">
-            <div class="account-number" id="seabank">901010934880</div>
-            <div class="account-name">a.n. Rizka Arwani</div>
-          </div>
-          <button class="copy-btn" onclick="copyText('seabank')">📋 Salin</button>
-        </div>
-      </div>
-
-      <div class="payment-card">
-        <img src="https://i.imgur.com/j4R3BLB.png" alt="Danamon">
-        <h3>Danamon</h3>
-        <div class="account-info">
-          <div class="account-details">
-            <div class="account-number" id="danamon">003607068578</div>
-            <div class="account-name">a.n. Rizka Arwani</div>
-          </div>
-          <button class="copy-btn" onclick="copyText('danamon')">📋 Salin</button>
-        </div>
-      </div>
-
-      <div class="payment-card">
-        <img src="https://i.imgur.com/8qIJs4A.png" alt="CIMB Niaga">
-        <h3>CIMB Niaga</h3>
-        <div class="account-info">
-          <div class="account-details">
-            <div class="account-number" id="cimb">707538102300</div>
-            <div class="account-name">a.n. Rizka Arwani</div>
-          </div>
-          <button class="copy-btn" onclick="copyText('cimb')">📋 Salin</button>
-        </div>
-      </div>
-
-      <div class="payment-card">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/BTN_2024.svg/1920px-BTN_2024.svg.png?20240303202616" alt="BTN">
-        <h3>BTN</h3>
-        <div class="account-info">
-          <div class="account-details">
-            <div class="account-number" id="btn">18201700001239</div>
-            <div class="account-name">a.n. Rizka Arwani</div>
-          </div>
-          <button class="copy-btn" onclick="copyText('btn')">📋 Salin</button>
-        </div>
-      </div>
-
-      <div class="payment-card">
-        <img src="https://i.imgur.com/pE6TFyC.png" alt="ShopeePay, Dana, Gopay">
-        <h3>ShopeePay, Dana, Gopay</h3>
-        <div class="account-info">
-          <div class="account-details">
-            <div class="account-number" id="ewallet">082326525782</div>
-            <div class="account-name">a.n. Rizka Arwani</div>
-          </div>
-          <button class="copy-btn" onclick="copyText('ewallet')">📋 Salin</button>
-        </div>
-      </div>
-    </div>
-
-    <!-- Upload Section -->
-    <div class="upload-section">
-      <a href="form.html" class="upload-btn">🚀 Lanjut ke Upload Bukti</a>
-    </div>
-  </div>
-
-  <!-- Admin Panel (hidden) -->
-  <div class="admin-panel" id="adminPanel"></div>
-
-  <script>
-    // Fungsi untuk copy text
-    function copyText(id) {
-      const text = document.getElementById(id).innerText;
-      navigator.clipboard.writeText(text).then(() => {
-        const notif = document.getElementById('notif');
-        notif.innerHTML = `✅ <span style="font-weight:600;">Berhasil disalin: ${text}</span>`;
-        notif.style.display = 'block';
-
-        setTimeout(() => {
-          notif.style.display = 'none';
-        }, 3000);
-      }).catch(() => {
-        // Fallback untuk browser lama
-        const textArea = document.createElement('textarea');
-        textArea.value = text;
-        document.body.appendChild(textArea);
-        textArea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textArea);
+<!-- Modal Edukasi Bank Transfer -->
+<div id="modal-bank-edu" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); padding:20px; align-items:center; justify-content:center;">
+    <div class="glass animate__animated animate__zoomIn" style="width:100%; max-width:500px; padding:28px; position:relative;">
+        <button onclick="closeBankEduModal()" style="position:absolute; top:20px; right:20px; background:transparent; border:none; color:white; font-size:22px; cursor:pointer; opacity:0.7; transition:0.3s;"><i class="fa-solid fa-xmark"></i></button>
+        <h3 style="font-family:'Syne', sans-serif; font-size:22px; font-weight:800; margin-bottom:20px; text-align:center;">Cara Transfer Manual</h3>
         
-        const notif = document.getElementById('notif');
-        notif.innerHTML = `✅ Berhasil disalin: <strong>${text}</strong>`;
-        notif.style.display = 'block';
-        
-        setTimeout(() => {
-          notif.style.display = 'none';
-        }, 3000);
+        <div class="swiper" id="bank-edu-swiper" style="height:260px; border-radius:16px;">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(79,70,229,0.2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(167,139,250,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-copy" style="font-size:28px;color:#a78bfa;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">1. Salin Nomor Rekening</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Klik nomor rekening tujuan pada daftar bank untuk menyalinnya.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(5,150,105,0.25),rgba(4,120,87,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(52,211,153,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-mobile-screen" style="font-size:28px;color:#34d399;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">2. Buka Aplikasi Keuangan</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Buka M-Banking, Internet Banking, atau E-Wallet kamu dan pilih menu Transfer.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(96,165,250,0.25),rgba(59,130,246,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(96,165,250,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-money-bill-transfer" style="font-size:28px;color:#60a5fa;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">3. Masukkan Detail & Transfer</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Tempel nomor rekening, pastikan nama sesuai, dan lakukan transfer.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(245,158,11,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-receipt" style="font-size:28px;color:#fbbf24;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">4. Simpan Bukti & Konfirmasi</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Screenshot resi / bukti transfer lalu hubungi admin via WA atau Form.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next" style="color:white;transform:scale(0.7);"></div>
+            <div class="swiper-button-prev" style="color:white;transform:scale(0.7);"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+// ================== NAVIGATION ==================
+let currentStep = 1;
+let selectedQris = null;
+let finalNominal = 0;
+let swiper;
+let bankSwiper; // Untuk modal edukasi bank
+
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const page = document.getElementById(id);
+  page.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function goToMain() {
+  showPage('page-main');
+  currentStep = 1;
+  selectedQris = null;
+  finalNominal = 0;
+  document.getElementById('nominal-input').value = '';
+  document.getElementById('fee-section').style.display = 'none';
+  document.getElementById('nominal-warning').style.display = 'none';
+  document.getElementById('btn-generate').disabled = true;
+  document.getElementById('btn-generate').style.opacity = '0.4';
+  document.getElementById('btn-generate').style.cursor = 'not-allowed';
+  document.getElementById('opt-qris1').classList.remove('selected');
+  document.getElementById('opt-qris2').classList.remove('selected');
+}
+
+function goToContact() {
+  showPage('page-contact');
+}
+
+function goToQris() {
+  showPage('page-qris');
+  currentStep = 1;
+  updateStepUI(1);
+  showQrisStep(1);
+  setTimeout(() => {
+    if (!swiper) {
+      swiper = new Swiper('#edu-swiper', {
+        loop: true,
+        pagination: { el: '#edu-swiper .swiper-pagination', clickable: true },
+        navigation: { nextEl: '#edu-swiper .swiper-button-next', prevEl: '#edu-swiper .swiper-button-prev' },
+        autoplay: { delay: 3000, disableOnInteraction: false }
       });
     }
+  }, 100);
+}
 
-    // Fungsi untuk popup warning
-    function showWarning() {
-      document.getElementById('warningPopup').style.display = 'flex';
-      document.getElementById('warningPopupInner').classList.remove('slide-left');
-    }
+function goToBank() {
+  showPage('page-bank');
+}
 
-    function closeWarning() {
-      document.getElementById('warningPopup').style.display = 'none';
-    }
-
-    // Fungsi untuk menampilkan kontak admin di dalam popup
-    function showAdminContact() {
-      document.getElementById('warningPopupInner').classList.add('slide-left');
-    }
-
-    // Fungsi untuk kembali ke warning
-    function backToWarning() {
-      document.getElementById('warningPopupInner').classList.remove('slide-left');
-    }
-
-    // Fungsi untuk modal QRIS
-    function openQris() {
-      document.getElementById('qrisModal').style.display = 'flex';
-    }
-
-    function closeQris() {
-      document.getElementById('qrisModal').style.display = 'none';
-    }
-
-    // Close modal ketika klik di luar
-    document.getElementById('qrisModal').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeQris();
-      }
+function goStep(step) {
+  if (step === 3 && !selectedQris) {
+    Swal.fire({
+      title: 'Pilih QRIS Dulu',
+      text: 'Silakan pilih QRIS 1 (Mandiri) atau QRIS 2 (Grab) sebelum melanjutkan.',
+      icon: 'warning',
+      background: 'rgba(20,10,40,0.97)',
+      color: '#e2e8f0',
+      confirmButtonColor: '#7c3aed',
+      confirmButtonText: 'Oke!',
+      customClass: { popup: 'swal-custom' }
     });
+    return;
+  }
+  currentStep = step;
+  updateStepUI(step);
+  showQrisStep(step);
+}
 
-    document.getElementById('warningPopup').addEventListener('click', function(e) {
-      if (e.target === this) {
-        closeWarning();
-      }
-    });
-  </script>
+function showQrisStep(step) {
+  for (let i = 1; i <= 4; i++) {
+    const el = document.getElementById('qris-step-' + i);
+    el.style.display = 'none';
+    el.classList.remove('animate__fadeIn', 'animate__fadeInRight');
+  }
+  const target = document.getElementById('qris-step-' + step);
+  target.style.display = 'block';
+  target.classList.add('animate__animated', 'animate__fadeIn');
+}
+
+function updateStepUI(step) {
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('dot-' + i);
+    dot.classList.remove('active', 'done');
+    if (i < step) dot.classList.add('done'), dot.innerHTML = '<i class="fa-solid fa-check" style="font-size:13px;"></i>';
+    else if (i === step) dot.classList.add('active'), dot.innerHTML = i;
+    else dot.innerHTML = i;
+    if (i < 4) {
+      const line = document.getElementById('line-' + i);
+      line.classList.toggle('done', i < step);
+    }
+  }
+}
+
+// ================== BANK EDU MODAL LOGIC ==================
+function openBankEduModal() {
+    document.getElementById('modal-bank-edu').style.display = 'flex';
+    if (!bankSwiper) {
+        bankSwiper = new Swiper('#bank-edu-swiper', {
+            loop: true,
+            pagination: { el: '#bank-edu-swiper .swiper-pagination', clickable: true },
+            navigation: { nextEl: '#bank-edu-swiper .swiper-button-next', prevEl: '#bank-edu-swiper .swiper-button-prev' },
+            autoplay: { delay: 3500, disableOnInteraction: false }
+        });
+    }
+}
+
+function closeBankEduModal() {
+    document.getElementById('modal-bank-edu').style.display = 'none';
+}
+
+// ================== QRIS LOGIC ==================
+function selectQris(type) {
+  selectedQris = type;
+  document.getElementById('opt-qris1').classList.toggle('selected', type === 'mandiri');
+  document.getElementById('opt-qris2').classList.toggle('selected', type === 'grab');
+  updateGenerateBtn();
+}
+
+function formatRupiah(n) {
+  return 'Rp ' + Math.round(n).toLocaleString('id-ID');
+}
+
+function updateNominal() {
+  const val = parseInt(document.getElementById('nominal-input').value) || 0;
+  const warning = document.getElementById('nominal-warning');
+  const feeSection = document.getElementById('fee-section');
+
+  if (val > 0 && val < 10000) {
+    warning.style.display = 'flex';
+  } else {
+    warning.style.display = 'none';
+  }
+
+  if (val > 500000) {
+    const mdr = Math.ceil(val * 0.003);
+    const total = val + mdr;
+    finalNominal = total;
+    feeSection.style.display = 'block';
+    document.getElementById('fee-nominal').textContent = formatRupiah(val);
+    document.getElementById('fee-mdr').textContent = '+ ' + formatRupiah(mdr);
+    document.getElementById('fee-total').textContent = formatRupiah(total);
+  } else {
+    feeSection.style.display = 'none';
+    finalNominal = val;
+  }
+  updateGenerateBtn();
+}
+
+function updateGenerateBtn() {
+  const val = parseInt(document.getElementById('nominal-input').value) || 0;
+  const ok = val >= 10000 && selectedQris;
+  const btn = document.getElementById('btn-generate');
+  btn.disabled = !ok;
+  btn.style.opacity = ok ? '1' : '0.4';
+  btn.style.cursor = ok ? 'pointer' : 'not-allowed';
+}
+
+// ================== CRC16 CCITT-FALSE ==================
+function crc16(str) {
+  let crc = 0xFFFF;
+  for (let i = 0; i < str.length; i++) {
+    crc ^= (str.charCodeAt(i) << 8);
+    for (let j = 0; j < 8; j++) {
+      crc = (crc & 0x8000) ? ((crc << 1) ^ 0x1021) : (crc << 1);
+      crc &= 0xFFFF;
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4, '0');
+}
+
+function buildQrisString(baseQris, nominal, isMandiri) {
+  let qris = baseQris;
+  if (isMandiri) qris = qris.replace('010211', '010212');
+
+  const nomStr = String(Math.round(nominal));
+  const len54 = nomStr.length.toString().padStart(2, '0');
+  const tag54 = '54' + len54 + nomStr;
+
+  const pos = qris.indexOf('5802ID');
+  if (pos === -1) return null;
+
+  let qrisBody = qris.substring(0, qris.length - 4); 
+  const crcPos = qrisBody.lastIndexOf('6304');
+  if (crcPos !== -1) qrisBody = qrisBody.substring(0, crcPos);
+
+  const insertPos = qrisBody.indexOf('5802ID');
+  const newBody = qrisBody.substring(0, insertPos) + tag54 + qrisBody.substring(insertPos);
+
+  const withCrcTag = newBody + '6304';
+  const newCrc = crc16(withCrcTag);
+  return withCrcTag + newCrc;
+}
+
+function generateQR() {
+  const val = parseInt(document.getElementById('nominal-input').value) || 0;
+  if (val < 10000 || !selectedQris) return;
+
+  const nominalToUse = finalNominal > 0 ? finalNominal : val;
+
+  goStep(3);
+
+  const container = document.getElementById('qr-container');
+  container.innerHTML = '<div class="loading-spinner"></div><p style="color:rgba(255,255,255,0.4);font-size:14px;">Generating QR Code...</p>';
+  document.getElementById('qr-detail').style.display = 'none';
+
+  const QRIS_MANDIRI = '00020101021126690021ID.CO.BANKMANDIRI.WWW01189360000801912612150211719126121540303UMI51440014ID.CO.QRIS.WWW0215ID10254388740060303UMI5204581553033605802ID5913RZ Cell Kudus6011Kudus (Kab)61055934962070703A016304F8D0';
+  const QRIS_GRAB = '00020101021126580006id.ovo011893600912000223253702151CY6MSqUKSSLJNP0303UMI51450015ID.OR.GPNQR.WWW0215ID10243196518490303UMI5204727853033605802ID5922TOKO KELONTONG Barokah6005Lebak61054231262310507oQpZdKf0716HipSI6sRDF2o6C45630444C4';
+
+  const base = selectedQris === 'mandiri' ? QRIS_MANDIRI : QRIS_GRAB;
+  const isMandiri = selectedQris === 'mandiri';
+
+  setTimeout(() => {
+    const finalQris = buildQrisString(base, nominalToUse, isMandiri);
+    if (!finalQris) {
+      Swal.fire({ title: 'Error', text: 'Gagal membuat QR Code. Coba lagi.', icon: 'error', background: 'rgba(20,10,40,0.97)', color: '#e2e8f0', confirmButtonColor: '#7c3aed' });
+      return;
+    }
+
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=' + encodeURIComponent(finalQris) + '&ecc=M&margin=1';
+
+    const img = new Image();
+    img.onload = function() {
+      container.innerHTML = `
+        <div class="qr-frame">
+          <img src="${qrUrl}" width="200" height="200" alt="QRIS Code" style="display:block;border-radius:8px;">
+          
+          <!-- 2. Logo Custom di tengah QR -->
+          <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.3);padding:4px;">
+            <img src="https://i.imgur.com/78Xkxd6.png" style="width:100%;height:100%;object-fit:contain;border-radius:6px;" alt="Logo Tengah">
+          </div>
+
+        </div>
+        <div style="text-align:center;">
+          <div style="font-size:13px;color:rgba(255,255,255,0.4);margin-bottom:4px;">Berlaku untuk</div>
+          <div style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;color:#34d399;">${formatRupiah(nominalToUse)}</div>
+        </div>
+      `;
+
+      document.getElementById('qr-detail').style.display = 'block';
+      document.getElementById('qr-method').textContent = isMandiri ? 'QRIS 1 - Mandiri' : 'QRIS 2 - Grab/OVO';
+      document.getElementById('qr-amount-display').textContent = formatRupiah(nominalToUse);
+
+      confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#a78bfa','#34d399','#60a5fa','#fbbf24'] });
+      setTimeout(() => confetti({ particleCount: 60, spread: 55, origin: { y: 0.5, x: 0.3 }, colors: ['#a78bfa','#f9a8d4'] }), 400);
+      setTimeout(() => confetti({ particleCount: 60, spread: 55, origin: { y: 0.5, x: 0.7 }, colors: ['#34d399','#60a5fa'] }), 700);
+    };
+    img.onerror = function() {
+      container.innerHTML = `<div style="text-align:center;padding:20px;"><i class="fa-solid fa-triangle-exclamation" style="font-size:32px;color:#fbbf24;margin-bottom:12px;display:block;"></i><p style="color:rgba(255,255,255,0.6);">Gagal memuat QR Code.<br>Pastikan kamu terhubung ke internet.</p></div>`;
+    };
+    img.src = qrUrl;
+  }, 800);
+}
+
+// ================== COPY TO CLIPBOARD ==================
+function copyRek(number, bank) {
+  navigator.clipboard.writeText(number).then(() => {
+    showToast('Rekening ' + bank + ' disalin!', '✓', '#34d399');
+  }).catch(() => {
+    const ta = document.createElement('textarea');
+    ta.value = number;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showToast('Rekening ' + bank + ' disalin!', '✓', '#34d399');
+  });
+}
+
+function showToast(message, icon, color) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `
+    <div style="width:32px;height:32px;background:${color}22;border-radius:8px;display:flex;align-items:center;justify-content:center;color:${color};font-weight:700;font-size:16px;flex-shrink:0;">${icon}</div>
+    <div>
+      <div style="font-weight:600;font-size:14px;color:#e2e8f0;">${message}</div>
+      <div style="font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px;">Tempel di kolom transfer kamu</div>
+    </div>
+  `;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.classList.add('hide');
+    setTimeout(() => toast.remove(), 400);
+  }, 3200);
+}
+
+// ================== WHATSAPP ==================
+function confirmWA() {
+  const nominal = document.getElementById('nominal-input').value;
+  const method = selectedQris ? (selectedQris === 'mandiri' ? 'QRIS Mandiri' : 'QRIS Grab/OVO') : 'Transfer Bank';
+  const msg = encodeURIComponent(`Halo, saya ingin konfirmasi pembayaran.\n\nMetode: ${method}\nNominal: ${nominal ? 'Rp ' + parseInt(nominal).toLocaleString('id-ID') : '-'}\n\nMohon dikonfirmasi. Terima kasih!`);
+  window.open('https://wa.me/6282326525782?text=' + msg, '_blank');
+}
+
+// ================== SWAL CUSTOM THEME ==================
+const swalTheme = {
+  background: 'rgba(15,8,35,0.97)',
+  color: '#e2e8f0',
+  confirmButtonColor: '#7c3aed',
+  customClass: { popup: 'swal-custom' },
+  backdrop: 'rgba(0,0,0,0.6)',
+};
+</script>
 </body>
 </html>
