@@ -441,7 +441,7 @@
     }
   }
 
-  /* Status Dot Animation (Permintaan 1) */
+  /* Status Dot Animation */
   @keyframes pulseDot {
     0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
     70% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
@@ -534,10 +534,10 @@
             </div>
          </div>
        </div>
-    </div>
+    </div> <!-- Added missing closing div here -->
 
     <!-- Info card -->
-    <div class="glass-card" style="margin-top:24px;padding:20px;display:flex;align-items:center;gap:16px;" class="animate__animated animate__fadeIn">
+    <div class="glass-card animate__animated animate__fadeIn" style="margin-top:24px;padding:20px;display:flex;align-items:center;gap:16px;">
       <div style="width:44px;height:44px;background:rgba(167,139,250,0.15);border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
         <i class="fa-solid fa-shield-halved" style="color:#a78bfa;font-size:18px;"></i>
       </div>
@@ -591,7 +591,7 @@
 
   <!-- PAGE: QRIS STEPPER -->
   <div id="page-qris" class="page" style="max-width:640px;margin:0 auto;">
-    <!-- Step Indicator (Sekarang hanya 3 step) -->
+    <!-- Step Indicator -->
     <div class="step-indicator" id="step-indicator">
       <div class="step-dot active" id="dot-1">1</div>
       <div class="step-line" id="line-1"></div>
@@ -600,7 +600,7 @@
       <div class="step-dot" id="dot-3">3</div>
     </div>
 
-    <!-- STEP 1: Input Nominal & Pilih Merchant (Melewati halaman panduan manual) -->
+    <!-- STEP 1: Input Nominal & Pilih Merchant -->
     <div id="qris-step-1" class="glass animate__animated" style="padding:28px;display:none;">
       <div style="text-align:center;margin-bottom:24px;">
         <span style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#c4b5fd;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 1 of 3</span>
@@ -695,6 +695,13 @@
       <div id="qr-detail" style="display:none;margin-top:20px;">
         <div class="fee-breakdown" style="background:rgba(52,211,153,0.06);border-color:rgba(52,211,153,0.2);">
           <div style="font-size:12px;font-weight:700;color:#6ee7b7;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">Detail Transaksi</div>
+          
+          <!-- Tambahan Nama Merchant -->
+          <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
+            <span style="color:rgba(255,255,255,0.6);">Nama Merchant</span>
+            <span id="qr-merchant-name" style="font-weight:700;color:#e2e8f0;">-</span>
+          </div>
+
           <div style="display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;">
             <span style="color:rgba(255,255,255,0.6);">Metode</span>
             <span id="qr-method" style="font-weight:600;"></span>
@@ -704,11 +711,11 @@
             <span id="qr-amount-display" style="font-weight:800;color:#34d399;font-size:16px;"></span>
           </div>
         </div>
+      </div>
 
-        <div style="margin-top:12px;background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:12px;padding:12px 14px;display:flex;align-items:flex-start;gap:8px;">
-          <i class="fa-solid fa-circle-info" style="color:#fbbf24;margin-top:1px;flex-shrink:0;"></i>
-          <p style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;">QR Code berlaku untuk sekali pembayaran. Setelah scan, segera selesaikan transaksi. Jangan tutup halaman ini.</p>
-        </div>
+      <div style="margin-top:12px;background:rgba(255,193,7,0.08);border:1px solid rgba(255,193,7,0.2);border-radius:12px;padding:12px 14px;display:flex;align-items:flex-start;gap:8px;">
+        <i class="fa-solid fa-circle-info" style="color:#fbbf24;margin-top:1px;flex-shrink:0;"></i>
+        <p style="font-size:12px;color:rgba(255,255,255,0.6);line-height:1.5;">QR Code berlaku untuk sekali pembayaran. Setelah scan, segera selesaikan transaksi. Jangan tutup halaman ini.</p>
       </div>
 
       <div style="display:flex;gap:12px;margin-top:24px;">
@@ -894,7 +901,7 @@
     </div>
 
     <!-- Konfirmasi Transfer -->
-    <div class="glass-card" style="margin-top:24px;padding:20px;" class="animate__animated animate__fadeIn">
+    <div class="glass-card animate__animated animate__fadeIn" style="margin-top:24px;padding:20px;">
       <div style="font-weight:700;font-size:15px;margin-bottom:12px;display:flex;align-items:center;gap:8px;">
         <i class="fa-solid fa-circle-check" style="color:#34d399;"></i>
         Setelah Transfer
@@ -1079,7 +1086,7 @@
                 <div class="swiper-slide">
                     <div style="height:100%;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
                         <div style="width:64px;height:64px;background:rgba(245,158,11,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
-                            <i class="fa-solid fa-shield-check" style="font-size:28px;color:#fbbf24;"></i>
+                            <i class="fa-solid fa-circle-check" style="font-size:28px;color:#fbbf24;"></i>
                         </div>
                         <div style="text-align:center;">
                             <div style="font-weight:700;font-size:16px;margin-bottom:6px;">4. Konfirmasi Pembayaran</div>
@@ -1100,6 +1107,7 @@
 let currentStep = 1;
 let selectedQris = null;
 let finalNominal = 0;
+let selectedBank = null; // Menyimpan data bank yang di-copy
 
 let bankSwiper;
 let qrisWebSwiper;
@@ -1117,6 +1125,7 @@ function goToMain() {
   currentStep = 1;
   selectedQris = null;
   finalNominal = 0;
+  selectedBank = null; // Reset pilihan bank
   document.getElementById('nominal-input').value = '';
   document.getElementById('fee-section').style.display = 'none';
   document.getElementById('nominal-warning').style.display = 'none';
@@ -1132,8 +1141,7 @@ function goToContact() {
 }
 
 function goToQris() {
-  showPage('page-qris');
-  currentStep = 1; // Mulai langsung dari step input
+  showPage('page-qris'); 
   updateStepUI(1);
   showQrisStep(1);
 }
@@ -1253,6 +1261,8 @@ function formatRupiah(n) {
 
 function updateNominal() {
   const val = parseInt(document.getElementById('nominal-input').value) || 0;
+  finalNominal = 0; // BUG FIX: Mereset state nominal agar tidak nyangkut
+
   const warning = document.getElementById('nominal-warning');
   const feeSection = document.getElementById('fee-section');
 
@@ -1279,7 +1289,8 @@ function updateNominal() {
 
 function updateGenerateBtn() {
   const val = parseInt(document.getElementById('nominal-input').value) || 0;
-  const ok = val >= 10000 && selectedQris;
+  // BUG FIX: Validasi ketat, harus terpenuhi kedua syarat
+  const ok = val >= 10000 && selectedQris !== null; 
   const btn = document.getElementById('btn-generate');
   btn.disabled = !ok;
   btn.style.opacity = ok ? '1' : '0.4';
@@ -1368,6 +1379,7 @@ function generateQR() {
       `;
 
       document.getElementById('qr-detail').style.display = 'block';
+      document.getElementById('qr-merchant-name').textContent = isMandiri ? 'RZ CELL KUDUS' : 'TOKO KELONTONG BAROKAH';
       document.getElementById('qr-method').textContent = isMandiri ? 'Livin Merchant' : 'Grab Merchant';
       document.getElementById('qr-amount-display').textContent = formatRupiah(nominalToUse);
 
@@ -1384,6 +1396,7 @@ function generateQR() {
 
 // ================== COPY TO CLIPBOARD ==================
 function copyRek(number, bank) {
+  selectedBank = bank; // Menangkap bank yang di-copy user
   navigator.clipboard.writeText(number).then(() => {
     showToast('Rekening ' + bank + ' disalin!', '✓', '#34d399');
   }).catch(() => {
@@ -1417,9 +1430,33 @@ function showToast(message, icon, color) {
 
 // ================== WHATSAPP ==================
 function confirmWA() {
-  const nominal = document.getElementById('nominal-input').value;
-  const method = selectedQris ? (selectedQris === 'mandiri' ? 'QRIS Livin' : 'QRIS Grab') : 'Transfer Bank';
-  const msg = encodeURIComponent(`Halo, saya ingin konfirmasi pembayaran.\n\nMetode: ${method}\nNominal: ${nominal ? 'Rp ' + parseInt(nominal).toLocaleString('id-ID') : '-'}\n\nMohon dikonfirmasi. Terima kasih!`);
+  const inputVal = parseInt(document.getElementById('nominal-input').value) || 0;
+  const nominalFinal = finalNominal > 0 ? finalNominal : inputVal;
+  
+  let method, merchant, bankInfo;
+
+  if (selectedQris) {
+    // Jalur QRIS
+    method = selectedQris === 'mandiri' ? 'Livin Merchant' : 'Grab Merchant';
+    merchant = selectedQris === 'mandiri' ? 'RZ CELL KUDUS' : 'TOKO KELONTONG BAROKAH';
+    bankInfo = ""; // QRIS tidak butuh baris Bank
+  } else {
+    // Jalur Manual Bank Transfer
+    method = 'Transfer Bank';
+    merchant = 'Rizka Arwani';
+    const bankName = selectedBank ? selectedBank : '... (Isi Bank/E-Wallet)';
+    bankInfo = `Bank Tujuan: ${bankName}\n`; 
+  }
+  
+  const msg = encodeURIComponent(
+    `Halo, saya ingin konfirmasi pembayaran.\n\n` +
+    `Merchant: ${merchant}\n` +
+    `Metode: ${method}\n` +
+    bankInfo +
+    `Total Bayar: ${nominalFinal > 0 ? formatRupiah(nominalFinal) : 'Rp ... (Isi Nominal Tadi)'}\n\n` +
+    `Mohon dikonfirmasi. Terima kasih!`
+  );
+  
   window.open('https://wa.me/6282326525782?text=' + msg, '_blank');
 }
 
