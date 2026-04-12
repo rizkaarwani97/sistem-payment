@@ -425,20 +425,36 @@
     margin: 20px auto;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
-/* CSS untuk merapikan pilihan QRIS */
+
   .qris-container-pilihan {
     display: grid;
-    grid-template-columns: 1fr 1fr; /* Laptop tetap 2 kolom */
+    grid-template-columns: 1fr 1fr;
     gap: 12px;
   }
 
   @media (max-width: 640px) {
     .qris-container-pilihan {
-      grid-template-columns: 1fr !important; /* Di HP jadi 1 kolom (atas-bawah) */
+      grid-template-columns: 1fr !important;
     }
     .qris-option {
-      padding: 12px 16px !important; /* Padding lebih ramping */
+      padding: 12px 16px !important;
     }
+  }
+
+  /* Status Dot Animation (Permintaan 1) */
+  @keyframes pulseDot {
+    0% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0.7); }
+    70% { box-shadow: 0 0 0 6px rgba(52, 211, 153, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(52, 211, 153, 0); }
+  }
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background: #34d399;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+    animation: pulseDot 2s infinite;
   }
 </style>
 </head>
@@ -459,7 +475,7 @@
       <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:2px;">Personal Payment Gateway</div>
     </div>
     <div class="glass" style="padding:10px 16px;font-size:13px;color:rgba(255,255,255,0.6);display:flex;align-items:center;gap:8px;">
-      <span style="width:8px;height:8px;background:#34d399;border-radius:50%;display:inline-block;box-shadow:0 0 8px #34d399;"></span>
+      <span class="status-dot"></span>
       Secure & Online
     </div>
   </header>
@@ -505,7 +521,7 @@
       </div>
     </div>
 
-    <!-- 5. Tombol Kontak Admin di Halaman Awal -->
+    <!-- Tombol Kontak Admin di Halaman Awal -->
     <div class="animate__animated animate__fadeInUp animate__delay-1s" style="margin-top:20px;">
        <div class="main-choice-btn" onclick="goToContact()" style="padding:24px;">
          <div style="display:flex; align-items:center; gap:16px; justify-content:center;">
@@ -532,7 +548,7 @@
     </div>
   </div>
 
-  <!-- PAGE: KONTAK ADMIN (Sesuai instruksi #5) -->
+  <!-- PAGE: KONTAK ADMIN -->
   <div id="page-contact" class="page" style="max-width:600px;margin:0 auto;">
       <div style="display:flex;align-items:center;gap:16px;margin-bottom:28px;" class="animate__animated animate__fadeInDown">
         <button class="btn-secondary" onclick="goToMain()" style="padding:12px 16px;">
@@ -575,109 +591,48 @@
 
   <!-- PAGE: QRIS STEPPER -->
   <div id="page-qris" class="page" style="max-width:640px;margin:0 auto;">
-    <!-- Step Indicator -->
+    <!-- Step Indicator (Sekarang hanya 3 step) -->
     <div class="step-indicator" id="step-indicator">
       <div class="step-dot active" id="dot-1">1</div>
       <div class="step-line" id="line-1"></div>
       <div class="step-dot" id="dot-2">2</div>
       <div class="step-line" id="line-2"></div>
       <div class="step-dot" id="dot-3">3</div>
-      <div class="step-line" id="line-3"></div>
-      <div class="step-dot" id="dot-4">4</div>
     </div>
 
-    <!-- STEP 1: Edukasi -->
-    <div id="qris-step-1" class="glass animate__animated animate__fadeIn" style="padding:28px;">
-      <div style="text-align:center;margin-bottom:20px;">
-        <span style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#c4b5fd;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 1 of 4</span>
-        <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-top:12px;">Cara Bayar via QRIS</h2>
-        <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:4px;">Ikuti panduan berikut untuk pembayaran sukses</p>
-      </div>
-
-      <div class="swiper" id="edu-swiper" style="height:260px;margin-bottom:20px;">
-        <div class="swiper-wrapper">
-          <div class="swiper-slide">
-            <div style="height:100%;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(79,70,229,0.2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
-              <div style="width:64px;height:64px;background:rgba(167,139,250,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
-                <i class="fa-solid fa-mobile-screen-button" style="font-size:28px;color:#a78bfa;"></i>
-              </div>
-              <div style="text-align:center;">
-                <div style="font-weight:700;font-size:16px;margin-bottom:6px;">1. Buka Aplikasi Bank</div>
-                <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Buka aplikasi bank atau e-wallet kamu (GoPay, OVO, Dana, BCA, dll)</div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div style="height:100%;background:linear-gradient(135deg,rgba(5,150,105,0.25),rgba(4,120,87,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
-              <div style="width:64px;height:64px;background:rgba(52,211,153,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
-                <i class="fa-solid fa-qrcode" style="font-size:28px;color:#34d399;"></i>
-              </div>
-              <div style="text-align:center;">
-                <div style="font-weight:700;font-size:16px;margin-bottom:6px;">2. Pilih Scan QR / QRIS</div>
-                <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Cari menu "Bayar", "Scan QR", atau "QRIS" pada halaman utama aplikasi</div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div style="height:100%;background:linear-gradient(135deg,rgba(96,165,250,0.25),rgba(59,130,246,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
-              <div style="width:64px;height:64px;background:rgba(96,165,250,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
-                <i class="fa-solid fa-camera" style="font-size:28px;color:#60a5fa;"></i>
-              </div>
-              <div style="text-align:center;">
-                <div style="font-weight:700;font-size:16px;margin-bottom:6px;">3. Arahkan ke QR Code</div>
-                <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Scan QR Code yang tampil di layar ini. Nominal akan terisi otomatis</div>
-              </div>
-            </div>
-          </div>
-          <div class="swiper-slide">
-            <div style="height:100%;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
-              <div style="width:64px;height:64px;background:rgba(245,158,11,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
-                <i class="fa-solid fa-check-circle" style="font-size:28px;color:#fbbf24;"></i>
-              </div>
-              <div style="text-align:center;">
-                <div style="font-weight:700;font-size:16px;margin-bottom:6px;">4. Konfirmasi & Bayar</div>
-                <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Periksa detail, masukkan PIN, dan tunggu konfirmasi pembayaran berhasil</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="swiper-pagination"></div>
-        <div class="swiper-button-next" style="color:white;transform:scale(0.7);"></div>
-        <div class="swiper-button-prev" style="color:white;transform:scale(0.7);"></div>
-      </div>
-
-      <div style="display:flex;gap:12px;margin-top:8px;">
-        <button class="btn-secondary" style="flex:1;" onclick="goToMain()"><i class="fa-solid fa-arrow-left" style="margin-right:8px;"></i>Kembali</button>
-        <button class="btn-primary" style="flex:2;" onclick="goStep(2)"><span>Lanjut <i class="fa-solid fa-arrow-right" style="margin-left:6px;"></i></span></button>
-      </div>
-    </div>
-
-<!-- STEP 2: Input -->
-    <div id="qris-step-2" class="glass animate__animated" style="padding:28px;display:none;">
+    <!-- STEP 1: Input Nominal & Pilih Merchant (Melewati halaman panduan manual) -->
+    <div id="qris-step-1" class="glass animate__animated" style="padding:28px;display:none;">
       <div style="text-align:center;margin-bottom:24px;">
-        <span style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#c4b5fd;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 2 of 4</span>
+        <span style="background:rgba(167,139,250,0.15);border:1px solid rgba(167,139,250,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#c4b5fd;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 1 of 3</span>
         <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-top:12px;">Detail Pembayaran</h2>
         <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:4px;">Pilih QRIS dan masukkan nominal yang ingin dibayar</p>
       </div>
 
+      <!-- Tombol Edukasi QRIS Web -->
+      <button class="btn-secondary animate__animated animate__fadeInDown" onclick="openQrisWebEduModal()" style="width:100%; margin-bottom:20px; display:flex; justify-content:center; align-items:center; gap:8px;">
+          <i class="fa-solid fa-circle-play" style="color:#a78bfa; font-size:18px;"></i> Cara Pembayaran QRIS di Web
+      </button>
+
       <div style="margin-bottom: 20px;">
         <label>Pilih QRIS</label>
         <div class="qris-container-pilihan">
+          <!-- Livin Merchant -->
           <div class="qris-option" id="opt-qris1" onclick="selectQris('mandiri')">
             <div style="display:flex;align-items:center;gap:12px;">
-              <div style="width:40px;height:40px;background:linear-gradient(135deg,#003087,#0050a0);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:white;flex-shrink:0;">M</div>
+              <img src="https://i.imgur.com/1mScupv.png" alt="Livin" style="width:40px;height:40px;border-radius:10px;object-fit:cover;flex-shrink:0;">
               <div style="line-height: 1.2;">
-                <div style="font-weight:700;font-size:15px;">QRIS 1</div>
-                <div style="font-size:12px;color:rgba(255,255,255,0.5);">Mandiri</div>
+                <div style="font-weight:700;font-size:15px;">Livin Merchant</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.5);">Otomatis</div>
               </div>
             </div>
           </div>
+          <!-- Grab Merchant -->
           <div class="qris-option" id="opt-qris2" onclick="selectQris('grab')">
             <div style="display:flex;align-items:center;gap:12px;">
-              <div style="width:40px;height:40px;background:linear-gradient(135deg,#00b14f,#009c3d);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:white;flex-shrink:0;">G</div>
+              <img src="https://i.imgur.com/h14DTmw.png" alt="Grab" style="width:40px;height:40px;border-radius:10px;object-fit:cover;flex-shrink:0;">
               <div style="line-height: 1.2;">
-                <div style="font-weight:700;font-size:15px;">QRIS 2</div>
-                <div style="font-size:12px;color:rgba(255,255,255,0.5);">Grab/OVO</div>
+                <div style="font-weight:700;font-size:15px;">Grab Merchant</div>
+                <div style="font-size:12px;color:rgba(255,255,255,0.5);">Otomatis</div>
               </div>
             </div>
           </div>
@@ -712,20 +667,25 @@
       </div>
 
       <div style="display:flex;gap:12px;margin-top:24px;">
-        <button class="btn-secondary" style="flex:1;" onclick="goStep(1)"><i class="fa-solid fa-arrow-left" style="margin-right:8px;"></i>Kembali</button>
+        <button class="btn-secondary" style="flex:1;" onclick="goToMain()"><i class="fa-solid fa-arrow-left" style="margin-right:8px;"></i>Kembali</button>
         <button class="btn-primary" id="btn-generate" style="flex:2;opacity:0.4;cursor:not-allowed;" onclick="generateQR()" disabled>
           <span><i class="fa-solid fa-qrcode" style="margin-right:8px;"></i>Generate QR</span>
         </button>
       </div>
     </div>
 
-    <!-- STEP 3: QR Code -->
-    <div id="qris-step-3" class="glass animate__animated" style="padding:28px;display:none;">
+    <!-- STEP 2: QR Code Scan -->
+    <div id="qris-step-2" class="glass animate__animated" style="padding:28px;display:none;">
       <div style="text-align:center;margin-bottom:24px;">
-        <span style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#6ee7b7;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 3 of 4</span>
+        <span style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#6ee7b7;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 2 of 3</span>
         <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-top:12px;">Scan QR Code</h2>
         <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:4px;">Scan QR ini dengan aplikasi bank atau e-wallet kamu</p>
       </div>
+
+      <!-- Tombol Edukasi QRIS Umum -->
+      <button class="btn-secondary animate__animated animate__fadeInDown" onclick="openQrisGenEduModal()" style="width:100%; margin-bottom:20px; display:flex; justify-content:center; align-items:center; gap:8px;">
+          <i class="fa-solid fa-circle-play" style="color:#34d399; font-size:18px;"></i> Petunjuk Pembayaran QRIS
+      </button>
 
       <div class="qr-container" id="qr-container">
         <div class="loading-spinner"></div>
@@ -752,21 +712,21 @@
       </div>
 
       <div style="display:flex;gap:12px;margin-top:24px;">
-        <button class="btn-secondary" style="flex:1;" onclick="goStep(2)"><i class="fa-solid fa-arrow-left" style="margin-right:8px;"></i>Kembali</button>
-        <button class="btn-success" style="flex:2;" onclick="goStep(4)">
+        <button class="btn-secondary" style="flex:1;" onclick="goStep(1)"><i class="fa-solid fa-arrow-left" style="margin-right:8px;"></i>Kembali</button>
+        <button class="btn-success" style="flex:2;" onclick="goStep(3)">
           <i class="fa-solid fa-check" style="margin-right:8px;"></i>Sudah Bayar
         </button>
       </div>
     </div>
 
-    <!-- STEP 4: Konfirmasi -->
-    <div id="qris-step-4" class="glass animate__animated" style="padding:28px;display:none;">
+    <!-- STEP 3: Konfirmasi -->
+    <div id="qris-step-3" class="glass animate__animated" style="padding:28px;display:none;">
       <div style="text-align:center;margin-bottom:24px;">
         <div style="width:72px;height:72px;background:linear-gradient(135deg,rgba(52,211,153,0.3),rgba(5,150,105,0.2));border-radius:22px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;position:relative;">
           <i class="fa-solid fa-paper-plane" style="font-size:28px;color:#34d399;"></i>
           <div class="pulse-ring"></div>
         </div>
-        <span style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#6ee7b7;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 4 of 4</span>
+        <span style="background:rgba(52,211,153,0.15);border:1px solid rgba(52,211,153,0.25);padding:5px 14px;border-radius:20px;font-size:12px;color:#6ee7b7;font-weight:600;text-transform:uppercase;letter-spacing:1px;">Step 3 of 3</span>
         <h2 style="font-family:'Syne',sans-serif;font-size:22px;font-weight:800;margin-top:12px;">Konfirmasi Pembayaran</h2>
         <p style="color:rgba(255,255,255,0.5);font-size:13px;margin-top:4px;line-height:1.6;">Hubungi kami via WhatsApp atau isi form konfirmasi untuk verifikasi pembayaran</p>
       </div>
@@ -806,14 +766,12 @@
       </div>
     </div>
 
-    <!-- 3. Tombol Cara Pembayaran Manual Transfer -->
+    <!-- Tombol Cara Pembayaran Manual Transfer -->
     <button class="btn-secondary animate__animated animate__fadeInDown" onclick="openBankEduModal()" style="width:100%; margin-bottom:20px; display:flex; justify-content:center; align-items:center; gap:8px;">
         <i class="fa-solid fa-circle-play" style="color:#a78bfa; font-size:18px;"></i> Cara Pembayaran Manual Transfer
     </button>
 
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;" class="animate__animated animate__fadeInUp">
-      
-      <!-- 4. Mengganti semua ikon bank dengan gambar asli -->
       <!-- BCA -->
       <div class="bank-card" onclick="copyRek('8365478640','BCA')">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -827,7 +785,6 @@
         <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
         <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
       </div>
-
       <!-- BNI -->
       <div class="bank-card" onclick="copyRek('0837947494','BNI')">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -841,7 +798,6 @@
         <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
         <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
       </div>
-
       <!-- BRI -->
       <div class="bank-card" onclick="copyRek('592801047177534','BRI')">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -855,7 +811,6 @@
         <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
         <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
       </div>
-
       <!-- Mandiri -->
       <div class="bank-card" onclick="copyRek('1840003632856','Mandiri')">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -869,7 +824,6 @@
         <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
         <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
       </div>
-
       <!-- Seabank -->
       <div class="bank-card" onclick="copyRek('901010934880','SeaBank')">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -883,7 +837,6 @@
         <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
         <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
       </div>
-
       <!-- Danamon -->
       <div class="bank-card" onclick="copyRek('003607068578','Danamon')">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -897,7 +850,6 @@
         <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
         <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
       </div>
-
       <!-- CIMB -->
       <div class="bank-card" onclick="copyRek('707538102300','CIMB Niaga')">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -911,7 +863,6 @@
         <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
         <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
       </div>
-
       <!-- BTN -->
       <div class="bank-card" onclick="copyRek('18201700001239','BTN')">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -925,7 +876,6 @@
         <div style="font-size:11px;color:rgba(255,255,255,0.4);">a.n Rizka Arwani</div>
         <div style="position:absolute;top:14px;right:14px;"><i class="fa-regular fa-copy" style="color:rgba(255,255,255,0.2);font-size:14px;"></i></div>
       </div>
-
       <!-- E-Wallet -->
       <div class="bank-card" onclick="copyRek('082326525782','E-Wallet')">
         <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
@@ -962,6 +912,8 @@
   </div>
 
 </div>
+
+<!-- MODALS EDUKASI -->
 
 <!-- Modal Edukasi Bank Transfer -->
 <div id="modal-bank-edu" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); padding:20px; align-items:center; justify-content:center;">
@@ -1023,13 +975,135 @@
     </div>
 </div>
 
+<!-- Modal Edukasi QRIS di Web (Tahap 1) -->
+<div id="modal-qris-web-edu" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); padding:20px; align-items:center; justify-content:center;">
+    <div class="glass animate__animated animate__zoomIn" style="width:100%; max-width:500px; padding:28px; position:relative;">
+        <button onclick="closeQrisWebEduModal()" style="position:absolute; top:20px; right:20px; background:transparent; border:none; color:white; font-size:22px; cursor:pointer; opacity:0.7; transition:0.3s;"><i class="fa-solid fa-xmark"></i></button>
+        <h3 style="font-family:'Syne', sans-serif; font-size:22px; font-weight:800; margin-bottom:20px; text-align:center;">Cara Bayar di Web</h3>
+        
+        <div class="swiper" id="qris-web-edu-swiper" style="height:260px; border-radius:16px;">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(79,70,229,0.2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(167,139,250,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-store" style="font-size:28px;color:#a78bfa;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">1. Pilih Merchant QRIS</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Pilih Livin Merchant atau Grab Merchant untuk memproses QR kamu.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(5,150,105,0.25),rgba(4,120,87,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(52,211,153,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-keyboard" style="font-size:28px;color:#34d399;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">2. Masukkan Nominal</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Ketikkan nominal yang ingin dibayar (minimal Rp 10.000).</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(96,165,250,0.25),rgba(59,130,246,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(96,165,250,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-qrcode" style="font-size:28px;color:#60a5fa;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">3. Klik Generate QR</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Tombol akan aktif. Klik Generate QR Code untuk memunculkan kode.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(245,158,11,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-check-circle" style="font-size:28px;color:#fbbf24;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">4. Selesaikan Scan & Bayar</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Lanjutkan proses pembayaran dengan cara Scan pada aplikasi M-Banking/E-Wallet kamu.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next" style="color:white;transform:scale(0.7);"></div>
+            <div class="swiper-button-prev" style="color:white;transform:scale(0.7);"></div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Edukasi QRIS Umum (Tahap 2) -->
+<div id="modal-qris-gen-edu" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.8); backdrop-filter:blur(8px); padding:20px; align-items:center; justify-content:center;">
+    <div class="glass animate__animated animate__zoomIn" style="width:100%; max-width:500px; padding:28px; position:relative;">
+        <button onclick="closeQrisGenEduModal()" style="position:absolute; top:20px; right:20px; background:transparent; border:none; color:white; font-size:22px; cursor:pointer; opacity:0.7; transition:0.3s;"><i class="fa-solid fa-xmark"></i></button>
+        <h3 style="font-family:'Syne', sans-serif; font-size:22px; font-weight:800; margin-bottom:20px; text-align:center;">Cara Bayar via QRIS</h3>
+        
+        <div class="swiper" id="qris-gen-edu-swiper" style="height:260px; border-radius:16px;">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(124,58,237,0.3),rgba(79,70,229,0.2));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(167,139,250,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-mobile-screen-button" style="font-size:28px;color:#a78bfa;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">1. Buka Aplikasi Keuangan</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Buka M-Banking atau E-Wallet yang kamu miliki (BCA, Mandiri, GoPay, Dana, OVO, dll).</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(5,150,105,0.25),rgba(4,120,87,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(52,211,153,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-qrcode" style="font-size:28px;color:#34d399;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">2. Pilih Menu Scan</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Cari logo QRIS atau menu bertuliskan "Scan / Bayar" di halaman utama aplikasi.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(96,165,250,0.25),rgba(59,130,246,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(96,165,250,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-camera" style="font-size:28px;color:#60a5fa;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">3. Arahkan Kamera ke Layar</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Arahkan kamera aplikasi ke arah QR Code yang baru saja di-generate di website ini.</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <div style="height:100%;background:linear-gradient(135deg,rgba(245,158,11,0.25),rgba(217,119,6,0.15));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:24px;border-radius:16px;">
+                        <div style="width:64px;height:64px;background:rgba(245,158,11,0.2);border-radius:18px;display:flex;align-items:center;justify-content:center;">
+                            <i class="fa-solid fa-shield-check" style="font-size:28px;color:#fbbf24;"></i>
+                        </div>
+                        <div style="text-align:center;">
+                            <div style="font-weight:700;font-size:16px;margin-bottom:6px;">4. Konfirmasi Pembayaran</div>
+                            <div style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;">Periksa kecocokan nama dan nominal yang muncul, lalu masukkan PIN akun kamu.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+            <div class="swiper-button-next" style="color:white;transform:scale(0.7);"></div>
+            <div class="swiper-button-prev" style="color:white;transform:scale(0.7);"></div>
+        </div>
+    </div>
+</div>
+
 <script>
-// ================== NAVIGATION ==================
+// ================== NAVIGATION & VARIABLES ==================
 let currentStep = 1;
 let selectedQris = null;
 let finalNominal = 0;
-let swiper;
-let bankSwiper; // Untuk modal edukasi bank
+
+let bankSwiper;
+let qrisWebSwiper;
+let qrisGenSwiper;
 
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -1059,19 +1133,9 @@ function goToContact() {
 
 function goToQris() {
   showPage('page-qris');
-  currentStep = 1;
+  currentStep = 1; // Mulai langsung dari step input
   updateStepUI(1);
   showQrisStep(1);
-  setTimeout(() => {
-    if (!swiper) {
-      swiper = new Swiper('#edu-swiper', {
-        loop: true,
-        pagination: { el: '#edu-swiper .swiper-pagination', clickable: true },
-        navigation: { nextEl: '#edu-swiper .swiper-button-next', prevEl: '#edu-swiper .swiper-button-prev' },
-        autoplay: { delay: 3000, disableOnInteraction: false }
-      });
-    }
-  }, 100);
 }
 
 function goToBank() {
@@ -1079,10 +1143,10 @@ function goToBank() {
 }
 
 function goStep(step) {
-  if (step === 3 && !selectedQris) {
+  if (step === 2 && !selectedQris) {
     Swal.fire({
       title: 'Pilih QRIS Dulu',
-      text: 'Silakan pilih QRIS 1 (Mandiri) atau QRIS 2 (Grab) sebelum melanjutkan.',
+      text: 'Silakan pilih Livin Merchant atau Grab Merchant sebelum melanjutkan.',
       icon: 'warning',
       background: 'rgba(20,10,40,0.97)',
       color: '#e2e8f0',
@@ -1098,7 +1162,7 @@ function goStep(step) {
 }
 
 function showQrisStep(step) {
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 3; i++) {
     const el = document.getElementById('qris-step-' + i);
     el.style.display = 'none';
     el.classList.remove('animate__fadeIn', 'animate__fadeInRight');
@@ -1109,20 +1173,27 @@ function showQrisStep(step) {
 }
 
 function updateStepUI(step) {
-  for (let i = 1; i <= 4; i++) {
+  for (let i = 1; i <= 3; i++) {
     const dot = document.getElementById('dot-' + i);
     dot.classList.remove('active', 'done');
-    if (i < step) dot.classList.add('done'), dot.innerHTML = '<i class="fa-solid fa-check" style="font-size:13px;"></i>';
-    else if (i === step) dot.classList.add('active'), dot.innerHTML = i;
-    else dot.innerHTML = i;
-    if (i < 4) {
+    if (i < step) {
+      dot.classList.add('done');
+      dot.innerHTML = '<i class="fa-solid fa-check" style="font-size:13px;"></i>';
+    } else if (i === step) {
+      dot.classList.add('active');
+      dot.innerHTML = i;
+    } else {
+      dot.innerHTML = i;
+    }
+    
+    if (i < 3) {
       const line = document.getElementById('line-' + i);
       line.classList.toggle('done', i < step);
     }
   }
 }
 
-// ================== BANK EDU MODAL LOGIC ==================
+// ================== EDU MODALS LOGIC ==================
 function openBankEduModal() {
     document.getElementById('modal-bank-edu').style.display = 'flex';
     if (!bankSwiper) {
@@ -1134,9 +1205,38 @@ function openBankEduModal() {
         });
     }
 }
-
 function closeBankEduModal() {
     document.getElementById('modal-bank-edu').style.display = 'none';
+}
+
+function openQrisWebEduModal() {
+    document.getElementById('modal-qris-web-edu').style.display = 'flex';
+    if (!qrisWebSwiper) {
+        qrisWebSwiper = new Swiper('#qris-web-edu-swiper', {
+            loop: true,
+            pagination: { el: '#qris-web-edu-swiper .swiper-pagination', clickable: true },
+            navigation: { nextEl: '#qris-web-edu-swiper .swiper-button-next', prevEl: '#qris-web-edu-swiper .swiper-button-prev' },
+            autoplay: { delay: 3500, disableOnInteraction: false }
+        });
+    }
+}
+function closeQrisWebEduModal() {
+    document.getElementById('modal-qris-web-edu').style.display = 'none';
+}
+
+function openQrisGenEduModal() {
+    document.getElementById('modal-qris-gen-edu').style.display = 'flex';
+    if (!qrisGenSwiper) {
+        qrisGenSwiper = new Swiper('#qris-gen-edu-swiper', {
+            loop: true,
+            pagination: { el: '#qris-gen-edu-swiper .swiper-pagination', clickable: true },
+            navigation: { nextEl: '#qris-gen-edu-swiper .swiper-button-next', prevEl: '#qris-gen-edu-swiper .swiper-button-prev' },
+            autoplay: { delay: 3500, disableOnInteraction: false }
+        });
+    }
+}
+function closeQrisGenEduModal() {
+    document.getElementById('modal-qris-gen-edu').style.display = 'none';
 }
 
 // ================== QRIS LOGIC ==================
@@ -1228,7 +1328,8 @@ function generateQR() {
 
   const nominalToUse = finalNominal > 0 ? finalNominal : val;
 
-  goStep(3);
+  // Lanjut ke Step 2 (Scan)
+  goStep(2);
 
   const container = document.getElementById('qr-container');
   container.innerHTML = '<div class="loading-spinner"></div><p style="color:rgba(255,255,255,0.4);font-size:14px;">Generating QR Code...</p>';
@@ -1255,7 +1356,6 @@ function generateQR() {
         <div class="qr-frame">
           <img src="${qrUrl}" width="200" height="200" alt="QRIS Code" style="display:block;border-radius:8px;">
           
-          <!-- 2. Logo Custom di tengah QR -->
           <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:40px;height:40px;background:white;border-radius:10px;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 12px rgba(0,0,0,0.3);padding:4px;">
             <img src="https://i.imgur.com/78Xkxd6.png" style="width:100%;height:100%;object-fit:contain;border-radius:6px;" alt="Logo Tengah">
           </div>
@@ -1268,7 +1368,7 @@ function generateQR() {
       `;
 
       document.getElementById('qr-detail').style.display = 'block';
-      document.getElementById('qr-method').textContent = isMandiri ? 'QRIS 1 - Mandiri' : 'QRIS 2 - Grab/OVO';
+      document.getElementById('qr-method').textContent = isMandiri ? 'Livin Merchant' : 'Grab Merchant';
       document.getElementById('qr-amount-display').textContent = formatRupiah(nominalToUse);
 
       confetti({ particleCount: 120, spread: 70, origin: { y: 0.6 }, colors: ['#a78bfa','#34d399','#60a5fa','#fbbf24'] });
@@ -1318,7 +1418,7 @@ function showToast(message, icon, color) {
 // ================== WHATSAPP ==================
 function confirmWA() {
   const nominal = document.getElementById('nominal-input').value;
-  const method = selectedQris ? (selectedQris === 'mandiri' ? 'QRIS Mandiri' : 'QRIS Grab/OVO') : 'Transfer Bank';
+  const method = selectedQris ? (selectedQris === 'mandiri' ? 'QRIS Livin' : 'QRIS Grab') : 'Transfer Bank';
   const msg = encodeURIComponent(`Halo, saya ingin konfirmasi pembayaran.\n\nMetode: ${method}\nNominal: ${nominal ? 'Rp ' + parseInt(nominal).toLocaleString('id-ID') : '-'}\n\nMohon dikonfirmasi. Terima kasih!`);
   window.open('https://wa.me/6282326525782?text=' + msg, '_blank');
 }
