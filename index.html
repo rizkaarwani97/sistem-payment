@@ -890,8 +890,8 @@
             <i class="fa-solid fa-wallet" style="color:white;font-size:16px;"></i>
           </div>
           <div>
-            <div style="font-weight:700;font-size:14px;">E-Wallet</div>
-            <div style="font-size:11px;color:rgba(255,255,255,0.4);">Shopeepay / GoPay / DANA / OVO</div>
+            <div style="font-weight:700;font-size:14px;">Allobank/Proxy BI Fast/E-Wallet</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);">Allobank/Proxy BI Fast/ShopeePay / GoPay / DANA / OVO</div>
           </div>
         </div>
         <div style="font-family:monospace;font-size:16px;font-weight:700;letter-spacing:2px;color:#a78bfa;margin-bottom:6px;">082326525782</div>
@@ -1379,7 +1379,7 @@ function generateQR() {
       `;
 
       document.getElementById('qr-detail').style.display = 'block';
-      document.getElementById('qr-merchant-name').textContent = isMandiri ? 'RZ CELL KUDUS' : 'TOKO KELONTONG BAROKAH';
+      document.getElementById('qr-merchant-name').textContent = isMandiri ? 'RZ CELL KUDUS' : 'TOKO KELONTONG Barokah';
       document.getElementById('qr-method').textContent = isMandiri ? 'Livin Merchant' : 'Grab Merchant';
       document.getElementById('qr-amount-display').textContent = formatRupiah(nominalToUse);
 
@@ -1438,7 +1438,7 @@ function confirmWA() {
   if (selectedQris) {
     // Jalur QRIS
     method = selectedQris === 'mandiri' ? 'Livin Merchant' : 'Grab Merchant';
-    merchant = selectedQris === 'mandiri' ? 'RZ CELL KUDUS' : 'TOKO KELONTONG BAROKAH';
+    merchant = selectedQris === 'mandiri' ? 'RZ CELL KUDUS' : 'TOKO KELONTONG Barokah';
     bankInfo = ""; // QRIS tidak butuh baris Bank
   } else {
     // Jalur Manual Bank Transfer
